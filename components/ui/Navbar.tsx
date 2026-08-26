@@ -1,9 +1,15 @@
-import { ShoppingCart, Search } from "lucide-react";
+import { ShoppingCart, Search, ArrowLeft } from "lucide-react";
 import { auth0 } from "@/lib/auth0";
 import { syncUser } from "@/lib/services/userService";
 import LogoutModal from "@/components/modals/logoutModal";
+import Link from "next/link";
+import Logo from "../../public/img/Logo.png";
 
-const Navbar = async () => {
+type NavbarProps = {
+  showBackButton?: boolean;
+};
+
+const Navbar = async ({ showBackButton = false }: NavbarProps) => {
   const session = await auth0.getSession();
 
   if (session) {
@@ -19,22 +25,43 @@ const Navbar = async () => {
 
   return (
     <nav className="border-b border-zinc-800 bg-zinc-950">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
-        <h1 className="font-mono text-lg font-bold tracking-tight text-zinc-50">
-          TechHub
-        </h1>
+      <div
+        className={`max-w-350 mx-auto flex w-full  items-center justify-between px-6 py-2 sm:px-8`}
+      >
+        <div className="flex items-center gap-3">
+          {showBackButton && (
+            <Link
+              href="/"
+              className="text-zinc-400 transition-colors hover:text-zinc-100"
+            >
+              <ArrowLeft size={25} />
+            </Link>
+          )}
+          <Link href="/">
+            <img
+              src={Logo.src}
+              alt="TechHub Logo"
+              className="h-10 cursor-pointer w-auto"
+            />
+          </Link>
+        </div>
 
         <div className="flex items-center gap-5">
-          <Search
-            size={20}
-            className="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100"
-          />
-          <ShoppingCart
-            size={20}
-            className="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100"
-          />
-
-          <div className="h-5 w-px bg-zinc-800" />
+          <div
+            className={`${showBackButton ? "gap-4" : "gap-5"} flex items-center`}
+          >
+            <Search
+              size={20}
+              className="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100"
+            />
+            <Link href="/cart">
+              <ShoppingCart
+                size={showBackButton ? 28 : 20}
+                className={`${showBackButton ? "text-green-400" : "text-zinc-400"} cursor-pointer  transition-colors hover:text-zinc-100`}
+              />
+            </Link>
+            <div className="h-5 w-px bg-zinc-800" />
+          </div>
 
           {session ? (
             <div className="flex items-center gap-3">

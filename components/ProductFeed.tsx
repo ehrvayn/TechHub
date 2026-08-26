@@ -35,6 +35,7 @@ async function ProductFeed() {
       {products.map((product) => (
         <ProductCard
           key={product.id}
+          productId={product.id}
           name={product.name}
           price={product.price}
           category={product.category}
