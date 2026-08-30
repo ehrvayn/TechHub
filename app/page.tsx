@@ -1,4 +1,4 @@
-import Navbar from "@/components/ui/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import ProductFeed from "@/components/ProductFeed";
 
 export default function Home() {

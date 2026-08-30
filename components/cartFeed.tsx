@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CartItemCard from "@/components/cartItemCard";
+import CartItemCard from "@/components/ui/cartItemCard";
+import { useRouter } from "next/navigation";
 
 type CartItem = {
   id: number;
@@ -19,6 +20,7 @@ function CartClient() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const router = useRouter();
 
   const fetchCart = async () => {
     const res = await fetch("/api/cart");
@@ -90,6 +92,11 @@ function CartClient() {
       </div>
     );
   }
+  const goToCheckout = () => {
+    if (selectedIds.size === 0) return;
+    const itemsParam = Array.from(selectedIds).join(",");
+    router.push(`/checkout?items=${itemsParam}`);
+  };
 
   const selectedTotal = items
     .filter((item) => selectedIds.has(item.id))
@@ -138,6 +145,7 @@ function CartClient() {
           </span>
         </div>
         <button
+          onClick={goToCheckout}
           disabled={selectedIds.size === 0}
           className="rounded-sm bg-emerald-400 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-600"
         >

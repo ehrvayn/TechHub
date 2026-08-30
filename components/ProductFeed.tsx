@@ -1,4 +1,4 @@
-import ProductCard from "./ProductCard";
+import ProductCard from "./ui/ProductCard";
 
 type Product = {
   id: number;

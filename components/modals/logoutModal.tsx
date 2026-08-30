@@ -9,13 +9,16 @@ function LogoutModal() {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        title="Log out"
-        className="text-zinc-400 transition-colors cursor-pointer hover:text-zinc-100"
-      >
-        <LogOut size={18} />
-      </button>
+      <div className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800">
+        <button
+          onClick={() => setIsOpen(true)}
+          title="Log out"
+          className="text-zinc-400 transition-colors cursor-pointer hover:text-zinc-100"
+        >
+          <LogOut size={18} />
+        </button>
+        Log out
+      </div>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
