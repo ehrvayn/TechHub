@@ -26,3 +26,15 @@ export const getOrderDetail = async (orderId: number, userId: number) => {
     return { success: false, message: "Something went wrong!" };
   }
 };
+
+export const listOrders = async (userId: number) => {
+  try {
+    const { query: sql, values } = OrdersQuery.getOrdersByUser(userId);
+    const result = await query(sql, values);
+
+    return { success: true, orders: result.rows };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};

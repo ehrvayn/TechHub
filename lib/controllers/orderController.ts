@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getOrderDetail } from "@/lib/services/orderService";
+import { getOrderDetail, listOrders } from "@/lib/services/orderService";
 import { auth0 } from "@/lib/auth0";
 import pool from "@/lib/database/db";
 
@@ -34,4 +34,19 @@ export async function handleGetOrderDetail(orderId: number) {
       { status: 500 },
     );
   }
+}
+
+export async function handleGetOrders() {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return NextResponse.json({ message: "Not logged in." }, { status: 401 });
+  }
+
+  const result = await listOrders(userId);
+
+  if (!result.success) {
+    return NextResponse.json(result, { status: 500 });
+  }
+
+  return NextResponse.json(result);
 }

@@ -45,7 +45,29 @@ const OrdersQuery = {
 
   getOrdersByUser: (userId: number) => {
     return {
-      query: `SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC`,
+      query: `
+      SELECT 
+        oi.id,
+        oi.order_id,
+        oi.product_id,
+        oi.product_name,
+        oi.price,
+        oi.quantity,
+        o.status,
+        o.created_at,
+        pi.url AS image_url
+      FROM orders o
+      JOIN order_items oi ON o.id = oi.order_id
+      LEFT JOIN LATERAL (
+        SELECT url 
+        FROM product_images 
+        WHERE product_id = oi.product_id 
+        ORDER BY sort_order ASC, id ASC 
+        LIMIT 1
+      ) pi ON true
+      WHERE o.user_id = $1
+      ORDER BY o.created_at DESC
+    `,
       values: [userId],
     };
   },
