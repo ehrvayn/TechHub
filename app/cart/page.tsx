@@ -1,4 +1,4 @@
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import CartClient from "@/components/cartFeed";

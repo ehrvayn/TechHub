@@ -85,6 +85,63 @@ const OrdersQuery = {
       values: [orderId],
     };
   },
+
+  getAllOrders: () => {
+    return {
+      query: `SELECT o.*, u.email FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC`,
+      values: [],
+    };
+  },
+
+  getAllOrderItems: () => {
+    return {
+      query: `
+      SELECT 
+        oi.id AS item_id,
+        oi.order_id,
+        oi.product_id,
+        oi.product_name,
+        oi.price,
+        oi.quantity,
+        (oi.price * oi.quantity) AS subtotal,
+        o.shipping_name,
+        o.status,
+        o.created_at,
+        pi.url AS image_url
+      FROM orders o
+      JOIN order_items oi ON o.id = oi.order_id
+      LEFT JOIN LATERAL (
+        SELECT url 
+        FROM product_images 
+        WHERE product_id = oi.product_id 
+        ORDER BY sort_order ASC, id ASC 
+        LIMIT 1
+      ) pi ON true
+      ORDER BY o.created_at DESC, oi.id ASC
+    `,
+      values: [],
+    };
+  },
+
+  updateOrderStatus: (orderId: number, status: string) => {
+    return {
+      query: `UPDATE orders SET status = $1 WHERE id = $2 RETURNING *`,
+      values: [status, orderId],
+    };
+  },
+
+  getStats: () => {
+    return {
+      query: `
+      SELECT
+        COUNT(*)::int AS order_count,
+        COALESCE(SUM(total), 0) AS revenue,
+        COUNT(*) FILTER (WHERE status = 'pending')::int AS pending_count
+      FROM orders
+    `,
+      values: [],
+    };
+  },
 };
 
 export default OrdersQuery;

@@ -9,6 +9,7 @@ type OrderItemCardProps = {
   quantity: number;
   status: string;
   imageUrl: string | null;
+  onClick?: () => void;
 };
 
 export default function OrderItemCard({
@@ -18,13 +19,17 @@ export default function OrderItemCard({
   quantity,
   status,
   imageUrl,
+  onClick,
 }: OrderItemCardProps) {
   const safePrice = Number(price) || 0;
   const safeQuantity = Number(quantity) || 1;
   const isPending = status.toLowerCase() === "pending";
 
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-4 transition-colors hover:border-zinc-700/80">
+    <div
+      onClick={onClick}
+      className="flex cursor-pointer items-center gap-4 rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-4 transition-colors hover:border-zinc-700/80"
+    >
       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border border-zinc-800 bg-zinc-950">
         {imageUrl ? (
           <Image src={imageUrl} alt={name} fill className="object-cover" />

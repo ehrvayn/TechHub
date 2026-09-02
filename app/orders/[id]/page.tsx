@@ -1,4 +1,4 @@
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { redirect, notFound } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import { getOrderDetail } from "@/lib/services/orderService";

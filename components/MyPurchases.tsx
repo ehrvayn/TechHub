@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, PackageX } from "lucide-react";
 import OrderItemCard from "@/components/ui/orderItemCard";
+import OrderDetailModal from "@/components/modals/OrderDetailModal";
 
 type OrderItem = {
   id: number;
@@ -21,6 +22,7 @@ export default function MyPurchases() {
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
 
   const fetchOrders = async () => {
     try {
@@ -124,9 +126,17 @@ export default function MyPurchases() {
               quantity={item.quantity}
               status={item.status}
               imageUrl={item.image_url}
+              onClick={() => setSelectedOrderId(item.order_id)}
             />
           ))}
         </div>
+      )}
+
+      {selectedOrderId && (
+        <OrderDetailModal
+          orderId={selectedOrderId}
+          onClose={() => setSelectedOrderId(null)}
+        />
       )}
     </div>
   );

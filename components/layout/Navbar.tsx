@@ -1,5 +1,5 @@
 import { ShoppingCart, Search, ArrowLeft } from "lucide-react";
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { syncUser } from "@/lib/services/userService";
 import Link from "next/link";
 import Logo from "../../public/img/Logo.png";

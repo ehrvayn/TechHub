@@ -1,5 +1,5 @@
 import { addToCart, getCart, updateCartItem, removeCartItem } from "@/lib/services/cartService";
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { NextResponse } from "next/server";
 import pool from "@/lib/database/db";
 

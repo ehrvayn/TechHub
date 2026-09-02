@@ -38,3 +38,55 @@ export const listOrders = async (userId: number) => {
     return { success: false, message: "Something went wrong!" };
   }
 };
+
+export const listAllOrders = async () => {
+  try {
+    const { query: sql, values } = OrdersQuery.getAllOrders();
+    const result = await query(sql, values);
+    return { success: true, orders: result.rows };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};
+
+export const listAllOrderItems = async () => {
+  try {
+    const { query: sql, values } = OrdersQuery.getAllOrderItems();
+    const result = await query(sql, values);
+    return { success: true, items: result.rows };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};
+
+export const updateOrderStatus = async (orderId: number, status: string) => {
+  try {
+    const { query: sql, values } = OrdersQuery.updateOrderStatus(
+      orderId,
+      status,
+    );
+    const result = await query(sql, values);
+
+    if (result.rows.length === 0) {
+      return { success: false, message: "Order not found." };
+    }
+
+    return { success: true, order: result.rows[0] };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};
+
+export const getAdminStats = async () => {
+  try {
+    const { query: sql, values } = OrdersQuery.getStats();
+    const result = await query(sql, values);
+    return { success: true, stats: result.rows[0] };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};
