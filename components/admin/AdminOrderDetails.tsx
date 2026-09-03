@@ -46,7 +46,7 @@ export default function AdminOrderDetails({
         <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4">
           <div>
             <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wider">
-              Order Details #{orderId}
+              Order Details
             </h2>
             <p className="text-zinc-500 text-[11px]">
               {firstItem.created_at
@@ -54,17 +54,19 @@ export default function AdminOrderDetails({
                 : "Recent Order"}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="rounded p-1 text-zinc-400 cursor-pointer hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
-          >
-            <X size={16} />
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={onClose}
+              className="rounded border cursor-pointer border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-100 hover:bg-zinc-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4 mb-6">
           <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3 space-y-2">
-            <h3 className="text-[11px] font-bold uppercase text-zinc-400 mb-1">
+            <h3 className="text-[11px] pb-1 border-b border-zinc-800/60 font-bold uppercase text-zinc-400 mb-1">
               Customer & Shipping Info
             </h3>
             <div className="flex items-center gap-2 text-zinc-200">
@@ -130,15 +132,6 @@ export default function AdminOrderDetails({
               ${orderTotal.toFixed(2)}
             </span>
           </div>
-        </div>
-
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className="rounded border cursor-pointer border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-100 hover:bg-zinc-700 transition-colors"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>

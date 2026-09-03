@@ -17,6 +17,7 @@ const STATUS_STYLE: Record<string, string> = {
   completed: "bg-[#8FAE8B]/10 text-[#8FAE8B] ring-1 ring-[#8FAE8B]/30",
   delivered: "bg-[#8FAE8B]/10 text-[#8FAE8B] ring-1 ring-[#8FAE8B]/30",
   cancelled: "bg-[#C97066]/10 text-[#C97066] ring-1 ring-[#C97066]/30",
+  "out for delivery": "bg-cyan-400/10 text-cyan-400 ring-1 ring-cyan-500/30",
 };
 
 export default function RecentOrdersTable({
@@ -56,7 +57,7 @@ export default function RecentOrdersTable({
             <span className="flex-1">Customer</span>
             <span className="w-24">Payment</span>
             <span className="w-20 text-right">Amount</span>
-            <span className="w-24 text-right">Status</span>
+            <span className="w-32 text-right">Status</span>
           </div>
           <div className="divide-y divide-[#2A2F34]">
             {orders.map((order) => {
@@ -82,9 +83,9 @@ export default function RecentOrdersTable({
                       ? `$${money(Number(order.total))}`
                       : "—"}
                   </span>
-                  <span className="flex w-24 justify-end">
+                  <span className="flex w-32 justify-end">
                     <span
-                      className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${
+                      className={`inline-flex items-center justify-center text-center whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${
                         STATUS_STYLE[status] ?? "bg-[#2A2F34] text-[#8B9198]"
                       }`}
                     >

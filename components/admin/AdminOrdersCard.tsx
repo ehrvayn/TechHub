@@ -72,7 +72,7 @@ export default function AdminOrderCard({
       return "bg-indigo-400/10 text-indigo-400 border-indigo-400/30";
     if (s === "transit")
       return "bg-purple-400/10 text-purple-400 border-purple-400/30";
-    if (s === "out_for_delivery")
+    if (s === "out for delivery")
       return "bg-cyan-400/10 text-cyan-400 border-cyan-400/30";
     if (s === "completed" || s === "paid" || s === "delivered")
       return "bg-emerald-400/10 text-emerald-400 border-emerald-400/30";

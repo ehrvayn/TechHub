@@ -2,7 +2,7 @@ const ProductsQuery = {
   retrieveAll: () => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.price, p.stock, c.name AS category,
+        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, c.name AS category,
                pi.url AS image_url, pi.alt_text
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id

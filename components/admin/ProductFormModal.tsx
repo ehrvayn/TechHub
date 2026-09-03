@@ -36,7 +36,6 @@ function ProductFormContent() {
   const {
     isEditing,
     name,
-    slug,
     price,
     stock,
     imageUrl,
@@ -49,8 +48,6 @@ function ProductFormContent() {
     dropdownRef,
     selectedCategoryName,
     filteredCategories,
-    setName,
-    setSlug,
     setPrice,
     setStock,
     setCategoryId,

@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Plus, Pencil, Trash2, ArrowUpDown } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Pencil,
+  Trash2,
+  ArrowUpDown,
+  ChevronRight,
+} from "lucide-react";
 import ProductFormModal from "./ProductFormModal";
+import ProductDetailsModal from "./ProductDetailModal";
 
 type Product = {
   id: number;
@@ -13,6 +21,8 @@ type Product = {
   category: string;
   category_id?: number;
   image_url: string | null;
+  description?: string;
+  specs?: Record<string, any>;
 };
 
 export default function InventoryTable() {
@@ -20,7 +30,11 @@ export default function InventoryTable() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  
+
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedProductDetails, setSelectedProductDetails] =
+    useState<Product | null>(null);
+
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
@@ -51,14 +65,26 @@ export default function InventoryTable() {
     setModalOpen(true);
   };
 
-  const categories = Array.from(new Set(products.map((p) => p.category))).filter(Boolean);
+  const openDetailsModal = (product: Product) => {
+    setSelectedProductDetails(product);
+    setDetailsModalOpen(true);
+  };
+
+  const categories = Array.from(
+    new Set(products.map((p) => p.category)),
+  ).filter(Boolean);
 
   const filteredProducts = products
-    .filter((p) => selectedCategory === "all" || p.category.toLowerCase() === selectedCategory.toLowerCase())
+    .filter(
+      (p) =>
+        selectedCategory === "all" ||
+        p.category.toLowerCase() === selectedCategory.toLowerCase(),
+    )
     .sort((a, b) => {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
-      if (sortOrder === "asc") return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      if (sortOrder === "asc")
+        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
       return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
     });
 
@@ -71,7 +97,7 @@ export default function InventoryTable() {
   }
 
   return (
-    <div className="overflow-hidden rounded-[4] border border-[#2A2F34] bg-zinc-800/20">
+    <div className="overflow-hidden rounded-sm border border-[#2A2F34] bg-zinc-800/20">
       <div className="flex flex-col gap-3 border-b border-[#2A2F34] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <h2 className="font-mono text-[11px] uppercase tracking-widest text-[#6B7278]">
@@ -93,7 +119,9 @@ export default function InventoryTable() {
             </select>
 
             <button
-              onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
+              onClick={() =>
+                setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+              }
               className="flex items-center gap-1 cursor-pointer rounded-sm border border-[#2A2F34] bg-[#1B1F23] px-2.5 py-1 font-mono text-xs uppercase text-[#6B7278] transition-colors hover:border-zinc-600 hover:text-[#F2F0EB]"
               title="Sort Alphabetically"
             >
@@ -124,7 +152,7 @@ export default function InventoryTable() {
             <span className="w-28">Category</span>
             <span className="w-20 text-right">Price</span>
             <span className="w-20 text-right">Stock</span>
-            <span className="w-20 text-right">Actions</span>
+            <span className="w-24 text-right">Actions</span>
           </div>
           <div className="divide-y divide-[#2A2F34]">
             {filteredProducts.map((p) => {
@@ -133,7 +161,8 @@ export default function InventoryTable() {
               return (
                 <div
                   key={p.id}
-                  className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[#1B1F23]"
+                  onClick={() => openDetailsModal(p)}
+                  className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[#1B1F23] cursor-pointer"
                 >
                   <div className="h-10 w-10 shrink-0 overflow-hidden rounded-sm border border-[#2A2F34] bg-zinc-950">
                     {p.image_url ? (
@@ -144,7 +173,7 @@ export default function InventoryTable() {
                       />
                     ) : null}
                   </div>
-                  <span className="flex-1 truncate text-sm text-[#F2F0EB]">
+                  <span className="flex-1 truncate text-sm text-[#F2F0EB] group-hover:text-emerald-400 transition-colors">
                     {p.name}
                   </span>
                   <span className="w-28 truncate font-mono text-xs uppercase text-[#6B7278]">
@@ -158,25 +187,34 @@ export default function InventoryTable() {
                       outOfStock
                         ? "text-[#C97066]"
                         : lowStock
-                        ? "text-[#D1A053]"
-                        : "text-[#F2F0EB]"
+                          ? "text-[#D1A053]"
+                          : "text-[#F2F0EB]"
                     }`}
                   >
                     {p.stock}
                   </span>
-                  <div className="flex w-20 justify-end gap-2">
+                  <div
+                    className="flex w-24 items-center justify-end gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       onClick={() => openEditModal(p)}
                       className="text-[#6B7278] transition-colors hover:text-[#F2F0EB]"
+                      title="Edit Product"
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => handleDelete(p.id)}
                       className="text-[#6B7278] transition-colors hover:text-[#C97066]"
+                      title="Delete Product"
                     >
                       <Trash2 size={14} />
                     </button>
+                    <ChevronRight
+                      size={14}
+                      className="text-[#6B7278] opacity-0 group-hover:opacity-100 transition-opacity ml-1"
+                    />
                   </div>
                 </div>
               );
@@ -195,6 +233,12 @@ export default function InventoryTable() {
           }}
         />
       )}
+
+      <ProductDetailsModal
+        isOpen={detailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+        product={selectedProductDetails}
+      />
     </div>
   );
 }
