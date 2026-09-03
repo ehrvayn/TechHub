@@ -1,43 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { LogOut, X } from "lucide-react";
+import React, { createContext, useContext, useState } from "react";
+import { X } from "lucide-react";
 
-type LogoutModalProps = {
-  isOpen?: boolean;
-  setIsOpen?: (isOpen: boolean) => void;
+type LogoutContextType = {
+  openLogout: () => void;
+  closeLogout: () => void;
 };
 
-export default function LogoutModal({
-  isOpen: externalIsOpen,
-  setIsOpen: externalSetIsOpen,
-}: LogoutModalProps) {
-  const [internalIsOpen, setInternalIsOpen] = useState(false);
+const LogoutContext = createContext<LogoutContextType | null>(null);
+
+export function LogoutProvider({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const isOpen = externalIsOpen ?? internalIsOpen;
-  const setIsOpen = externalSetIsOpen ?? setInternalIsOpen;
+  const openLogout = () => setIsOpen(true);
+  const closeLogout = () => {
+    setIsOpen(false);
+    setIsLoggingOut(false);
+  };
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors group hover:bg-zinc-800"
-      >
-        <LogOut size={16} className="text-zinc-400 group-hover:text-zinc-100" />
-        <span>Log out</span>
-      </button>
+    <LogoutContext.Provider value={{ openLogout, closeLogout }}>
+      {children}
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-md border border-zinc-800 bg-zinc-900 p-5 shadow-2xl">
+          <div className="w-full max-w-sm rounded-md border border-zinc-800 bg-zinc-900 p-5">
             <div className="flex items-start justify-between">
               <h2 className="text-sm font-medium text-zinc-100">
                 Log out of TechHub?
               </h2>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={closeLogout}
                 className="text-zinc-500 cursor-pointer hover:text-zinc-300"
               >
                 <X size={16} />
@@ -50,7 +45,7 @@ export default function LogoutModal({
 
             <div className="mt-5 flex justify-end gap-2">
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={closeLogout}
                 className="rounded-sm cursor-pointer border border-zinc-700 px-3.5 py-1.5 font-mono text-xs uppercase tracking-wide text-zinc-300 transition-colors hover:bg-zinc-800"
               >
                 Cancel
@@ -77,6 +72,14 @@ export default function LogoutModal({
           </div>
         </div>
       )}
-    </>
+    </LogoutContext.Provider>
   );
+}
+
+export function useLogout() {
+  const context = useContext(LogoutContext);
+  if (!context) {
+    throw new Error("useLogout must be used within LogoutProvider");
+  }
+  return context;
 }

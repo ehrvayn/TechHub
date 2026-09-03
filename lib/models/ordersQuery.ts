@@ -105,11 +105,17 @@ const OrdersQuery = {
         oi.quantity,
         (oi.price * oi.quantity) AS subtotal,
         o.shipping_name,
+        o.shipping_address,
+        o.shipping_city,
+        o.shipping_phone,
+        o.payment_method,
+        u.email,
         o.status,
         o.created_at,
         pi.url AS image_url
       FROM orders o
       JOIN order_items oi ON o.id = oi.order_id
+      LEFT JOIN users u ON o.user_id = u.id
       LEFT JOIN LATERAL (
         SELECT url 
         FROM product_images 
@@ -138,6 +144,21 @@ const OrdersQuery = {
         COALESCE(SUM(total), 0) AS revenue,
         COUNT(*) FILTER (WHERE status = 'pending')::int AS pending_count
       FROM orders
+    `,
+      values: [],
+    };
+  },
+
+  getRevenueByDay: () => {
+    return {
+      query: `
+      SELECT
+        DATE(created_at) AS day,
+        COALESCE(SUM(total), 0) AS revenue
+      FROM orders
+      WHERE created_at >= NOW() - INTERVAL '14 days'
+      GROUP BY DATE(created_at)
+      ORDER BY day ASC
     `,
       values: [],
     };

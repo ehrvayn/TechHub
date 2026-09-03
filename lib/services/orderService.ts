@@ -90,3 +90,18 @@ export const getAdminStats = async () => {
     return { success: false, message: "Something went wrong!" };
   }
 };
+
+export const getRevenueTrend = async () => {
+  try {
+    const { query: sql, values } = OrdersQuery.getRevenueByDay();
+    const result = await query(sql, values);
+    const trend = result.rows.map((row) => ({
+      day: new Date(row.day).toISOString().split("T")[0], // "2026-08-25"
+      revenue: row.revenue,
+    }));
+    return { success: true, trend };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};

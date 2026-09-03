@@ -26,6 +26,65 @@ const ProductsQuery = {
       values: [productId],
     };
   },
+
+  addProductImage: (productId: number, url: string) => {
+    return {
+      query: `
+      INSERT INTO product_images (product_id, url)
+      VALUES ($1, $2)
+    `,
+      values: [productId, url],
+    };
+  },
+
+  addProduct: (
+    name: string,
+    slug: string,
+    price: number,
+    stock: number,
+    categoryId: number,
+    description: string,
+    specs: any,
+  ) => {
+    return {
+      query: `
+        INSERT INTO products (name, slug, price, stock, category_id, description, specs)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *
+      `,
+      values: [name, slug, price, stock, categoryId, description, specs],
+    };
+  },
+
+  updateProduct: (
+    productId: number,
+    name: string,
+    slug: string,
+    price: number,
+    stock: number,
+    categoryId: number,
+  ) => {
+    return {
+      query: `
+        UPDATE products
+        SET name = $2, slug = $3, price = $4, stock = $5, category_id = $6
+        WHERE id = $1
+        RETURNING *
+      `,
+      values: [productId, name, slug, price, stock, categoryId],
+    };
+  },
+
+  deleteProduct: (productId: number) => {
+    return {
+      query: `
+        DELETE FROM products
+        WHERE id = $1
+        RETURNING *
+      `,
+      values: [productId],
+    };
+  },
 };
 
 export default ProductsQuery;

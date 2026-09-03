@@ -42,7 +42,7 @@ export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
               src={session.user.picture}
               alt={session.user.name ?? "Account"}
               referrerPolicy="no-referrer"
-              className="h-7 w-7 rounded-full transition-colors border border-zinc-700"
+              className="h-7 w-7 rounded-full object-cover transition-colors border border-zinc-700"
             />
             <p className="text-sm text-zinc-400">
               {session.user.name?.split(" ")[0] ?? "Account"}
@@ -52,19 +52,21 @@ export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
       ) : (
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
-          className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-400/10 font-mono text-xs font-semibold text-emerald-400 ring-1 ring-emerald-400/30"
+          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-emerald-400/10 font-mono text-xs font-semibold text-emerald-400 ring-1 ring-emerald-400/30"
         >
           {initials || "U"}
         </button>
       )}
 
       {menuOpen && (
-        <div className="absolute right-0 top-10 z-50 w-40 rounded-sm border border-zinc-800 bg-zinc-900 p-2 shadow-xl">
-          <Link href="/orders">
-            <button className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800">
-              <ShoppingBag size={16} className="text-zinc-400" />
-              My purchases
-            </button>
+        <div className="absolute right-0 top-10 z-50 w-44 rounded-sm border border-zinc-800 bg-zinc-900 p-1.5 shadow-xl">
+          <Link
+            href="/orders"
+            onClick={() => setMenuOpen(false)}
+            className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800"
+          >
+            <ShoppingBag size={16} className="text-zinc-400" />
+            <span>My purchases</span>
           </Link>
           <LogoutModal />
         </div>

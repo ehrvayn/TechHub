@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Loader2, PackageX } from "lucide-react";
+import { Search, Loader2, PackageX, ChevronDown } from "lucide-react";
 import AdminOrderCard from "./AdminOrdersCard";
 
 type OrderItemRow = {
@@ -18,13 +18,11 @@ type OrderItemRow = {
   image_url?: string;
 };
 
-type StatusType = "pending" | "completed" | "cancelled";
-
 export default function AdminOrdersFeed() {
   const [items, setItems] = useState<OrderItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | StatusType>("all");
+  const [selectedSort, setSelectedSort] = useState<string>("all");
 
   const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -90,12 +88,23 @@ export default function AdminOrdersFeed() {
 
   const filteredItems = items.filter((item) => {
     const itemStatus = item.status.toLowerCase();
-    const matchesTab =
-      activeTab === "all"
-        ? true
-        : activeTab === "completed"
-          ? itemStatus === "completed" || itemStatus === "paid"
-          : itemStatus === activeTab;
+    let matchesSort = true;
+
+    if (selectedSort === "pending") matchesSort = itemStatus === "pending";
+    else if (selectedSort === "processing")
+      matchesSort = itemStatus === "processing";
+    else if (selectedSort === "dispatched")
+      matchesSort = itemStatus === "dispatched";
+    else if (selectedSort === "transit") matchesSort = itemStatus === "transit";
+    else if (selectedSort === "out_for_delivery")
+      matchesSort = itemStatus === "out_for_delivery";
+    else if (selectedSort === "completed")
+      matchesSort =
+        itemStatus === "completed" ||
+        itemStatus === "paid" ||
+        itemStatus === "delivered";
+    else if (selectedSort === "cancelled")
+      matchesSort = itemStatus === "cancelled";
 
     const query = searchQuery.toLowerCase();
     const matchesSearch =
@@ -103,7 +112,7 @@ export default function AdminOrdersFeed() {
       item.product_name.toLowerCase().includes(query) ||
       (item.shipping_name && item.shipping_name.toLowerCase().includes(query));
 
-    return matchesTab && matchesSearch;
+    return matchesSort && matchesSearch;
   });
 
   const groupedOrders = filteredItems.reduce(
@@ -113,6 +122,15 @@ export default function AdminOrdersFeed() {
       return acc;
     },
     {} as Record<number, OrderItemRow[]>,
+  );
+
+  const sortedOrderEntries = Object.entries(groupedOrders).sort(
+    ([idA], [idB]) => {
+      if (selectedSort === "oldest") {
+        return Number(idA) - Number(idB);
+      }
+      return Number(idB) - Number(idA);
+    },
   );
 
   if (loading) {
@@ -140,51 +158,30 @@ export default function AdminOrdersFeed() {
           />
         </div>
 
-        <div className="flex gap-1 rounded-md border border-zinc-800 bg-zinc-900/60 p-1">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`rounded px-3 py-1 font-mono text-xs transition-colors ${
-              activeTab === "all"
-                ? "bg-zinc-800 text-zinc-100 font-medium"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
+        <div className="relative flex items-center">
+          <select
+            value={selectedSort}
+            onChange={(e) => setSelectedSort(e.target.value)}
+            className="appearance-none rounded-md border border-zinc-800 bg-zinc-900/80 px-3 py-2 pr-8 font-mono text-xs text-zinc-200 outline-none transition-colors hover:border-zinc-700 focus:border-emerald-400 cursor-pointer"
           >
-            All ({items.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("pending")}
-            className={`rounded px-3 py-1 font-mono text-xs transition-colors ${
-              activeTab === "pending"
-                ? "bg-amber-400/10 text-amber-400 font-medium ring-1 ring-amber-400/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            Pending
-          </button>
-          <button
-            onClick={() => setActiveTab("completed")}
-            className={`rounded px-3 py-1 font-mono text-xs transition-colors ${
-              activeTab === "completed"
-                ? "bg-emerald-400/10 text-emerald-400 font-medium ring-1 ring-emerald-400/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            Completed
-          </button>
-          <button
-            onClick={() => setActiveTab("cancelled")}
-            className={`rounded px-3 py-1 font-mono text-xs transition-colors ${
-              activeTab === "cancelled"
-                ? "bg-rose-400/10 text-rose-400 font-medium ring-1 ring-rose-400/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            Cancelled
-          </button>
+            <option value="newest">Recent</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="dispatched">Dispatched</option>
+            <option value="transit">In Transit</option>
+            <option value="out_for_delivery">Out for Delivery</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="oldest">Oldest</option>
+          </select>
+          <ChevronDown
+            size={14}
+            className="absolute right-3 text-zinc-400 pointer-events-none"
+          />
         </div>
       </div>
 
-      {Object.keys(groupedOrders).length === 0 ? (
+      {sortedOrderEntries.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-800 py-16 text-center">
           <PackageX className="mb-2 h-8 w-8 text-zinc-600" />
           <p className="font-mono text-xs text-zinc-500">
@@ -193,7 +190,7 @@ export default function AdminOrdersFeed() {
         </div>
       ) : (
         <div className="space-y-4">
-          {Object.entries(groupedOrders).map(([orderIdStr, orderItems]) => {
+          {sortedOrderEntries.map(([orderIdStr, orderItems]) => {
             const orderId = Number(orderIdStr);
             return (
               <AdminOrderCard
