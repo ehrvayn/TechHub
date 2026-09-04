@@ -10,6 +10,7 @@ import {
   Package,
   Bell,
   Settings,
+  ArrowLeft,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -45,10 +46,25 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r border-solid border-zinc-700 bg-zinc-950 px-4 pt-4 select-none">
+    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r border-solid border-zinc-700 bg-zinc-950 px-4 pt-2  select-none">
       <div className="space-y-6">
-        <div className="px-2 py-1">
-          <img src={AdminLogo.src} alt="TechHub Logo" className="h-17 w-full" />
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-3 rounded-[2] py-2 font-mono text-xs text-zinc-400 transition-colors hover:bg-zinc-900/50 hover:text-zinc-200"
+          >
+            <ArrowLeft size={15} className="text-zinc-500" />
+            <span>Back to Store</span>
+          </Link>
+          <div className="h-px flex bg-zinc-800 mx-[-17]" />
+        </div>
+
+        <div className="px-2">
+          <img
+            src={AdminLogo.src}
+            alt="TechHub Logo"
+            className="h-14 px-5 w-full"
+          />
         </div>
 
         <nav className="space-y-1">
@@ -82,7 +98,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="mb-4 -mx-4 border-t border-zinc-800 bg-zinc-950 pt-3 px-3">
+      <div className="mb-4 -mx-4 border-t border-zinc-800 bg-zinc-950 px-3 pt-3">
         <LogoutModal />
       </div>
     </aside>

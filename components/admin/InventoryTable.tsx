@@ -25,7 +25,9 @@ type Product = {
   specs?: Record<string, any>;
 };
 
-export default function InventoryTable() {
+type InventoryTableProps = {};
+
+export default function InventoryTable({}: InventoryTableProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -53,11 +55,6 @@ export default function InventoryTable() {
     if (!confirm("Delete this product? This cannot be undone.")) return;
     await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
     await fetchProducts();
-  };
-
-  const openAddModal = () => {
-    setEditingProduct(null);
-    setModalOpen(true);
   };
 
   const openEditModal = (product: Product) => {
@@ -130,14 +127,6 @@ export default function InventoryTable() {
             </button>
           </div>
         </div>
-
-        <button
-          onClick={openAddModal}
-          className="flex items-center cursor-pointer gap-1.5 rounded-sm bg-emerald-400 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300"
-        >
-          <Plus size={13} />
-          New product
-        </button>
       </div>
 
       {filteredProducts.length === 0 ? (

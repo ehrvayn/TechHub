@@ -7,12 +7,14 @@ import {
   ChevronDown,
   Plus,
   Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AdminProductProvider,
   useAdminProduct,
-} from "@/app/context/AdminProductContext";
+} from "@/context/AdminProductContext";
 
 type Product = {
   id: number;
@@ -39,6 +41,7 @@ function ProductFormContent() {
     price,
     stock,
     imageUrl,
+    setImageUrl,
     description,
     specRows,
     uploading,
@@ -63,6 +66,42 @@ function ProductFormContent() {
   } = useAdminProduct();
 
   const [isDragging, setIsDragging] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (imageUrl) {
+      const urls = imageUrl.includes(",")
+        ? imageUrl
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [imageUrl].filter(Boolean);
+      setImageUrls(urls);
+    } else {
+      setImageUrls([]);
+    }
+  }, [imageUrl]);
+
+  const removeImage = (indexToRemove: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = imageUrls.filter((_, idx) => idx !== indexToRemove);
+    setImageUrls(updated);
+    setImageUrl(updated.join(", "));
+    if (currentIndex >= updated.length && updated.length > 0) {
+      setCurrentIndex(updated.length - 1);
+    }
+  };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs px-4">
@@ -80,10 +119,19 @@ function ProductFormContent() {
         </div>
 
         <div className="flex flex-col gap-3.5">
-          <div className="flex flex-col gap-1.5">
-            <label className="font-mono text-[10px] uppercase tracking-wider text-[#6B7278]">
-              Product Image
-            </label>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <label className="font-mono text-[10px] uppercase tracking-wider text-[#6B7278]">
+                Product Gallery Images
+              </label>
+              {imageUrls.length > 0 && (
+                <span className="font-mono text-[10px] text-emerald-400">
+                  {imageUrls.length} image{imageUrls.length > 1 ? "s" : ""}{" "}
+                  uploaded
+                </span>
+              )}
+            </div>
+
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -93,14 +141,14 @@ function ProductFormContent() {
               onDrop={(e) => {
                 e.preventDefault();
                 setIsDragging(false);
-                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
                   const fakeEvent = {
                     target: { files: e.dataTransfer.files },
                   } as unknown as React.ChangeEvent<HTMLInputElement>;
                   handleImageUpload(fakeEvent);
                 }
               }}
-              className={`relative flex h-40 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-sm border border-dashed transition-colors ${
+              className={`relative flex h-48 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-sm border border-dashed transition-colors ${
                 isDragging
                   ? "border-emerald-400 bg-emerald-400/5"
                   : "border-[#2A2F34] bg-[#101215] hover:border-zinc-500"
@@ -109,37 +157,80 @@ function ProductFormContent() {
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleImageUpload}
                 disabled={uploading}
-                className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                className="absolute inset-0 z-20 cursor-pointer opacity-0"
               />
-              {imageUrl ? (
-                <div className="relative h-full w-full">
+              {imageUrls.length > 0 ? (
+                <div className="relative h-full w-full group">
                   <img
-                    src={imageUrl}
-                    alt="Preview"
+                    src={imageUrls[currentIndex]}
+                    alt={`Preview ${currentIndex + 1}`}
                     className="h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity hover:opacity-100 flex items-center justify-center">
-                    <span className="font-mono text-xs uppercase tracking-wide text-white bg-zinc-900/90 border border-zinc-700 px-3 py-1.5 rounded-sm">
-                      {uploading ? "Uploading..." : "Change Image"}
-                    </span>
-                  </div>
+
+                  {imageUrls.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={prevImage}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={nextImage}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-zinc-900/80 border border-zinc-700 px-2 py-0.5 rounded-sm font-mono text-[10px] text-white">
+                        {currentIndex + 1} / {imageUrls.length}
+                      </div>
+                    </>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={(e) => removeImage(currentIndex, e)}
+                    className="absolute top-2 right-2 z-30 bg-red-900/80 hover:bg-red-700 text-white p-1.5 rounded-sm transition-colors border border-red-700 cursor-pointer"
+                    title="Remove Image"
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
                   <Upload size={20} className="text-[#6B7278]" />
                   <div className="flex flex-col gap-0.5">
                     <p className="font-mono text-xs uppercase tracking-wide text-[#F2F0EB]">
-                      {uploading ? "Uploading..." : "Drag & drop image here"}
+                      {uploading ? "Uploading..." : "Drag & drop images here"}
                     </p>
                     <p className="font-mono text-[10px] text-[#6B7278]">
-                      or click to browse from device
+                      or click to browse multiple files from device
                     </p>
                   </div>
                 </div>
               )}
             </div>
+
+            {imageUrls.length > 0 && (
+              <label className="relative flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-sm border border-dashed border-emerald-500/50 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 font-mono text-xs uppercase tracking-wider cursor-pointer transition-colors shadow-sm">
+                <Upload size={14} />
+                <span>{uploading ? "Uploading..." : "Add More Images"}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                />
+              </label>
+            )}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -248,7 +339,7 @@ function ProductFormContent() {
               <button
                 type="button"
                 onClick={addSpecRow}
-                className="flex items-center gap-1 font-mono text-[10px] uppercase text-emerald-400 hover:text-emerald-300"
+                className="flex items-center gap-1 font-mono text-[10px] uppercase text-emerald-400 hover:text-emerald-300 cursor-pointer"
               >
                 <Plus size={12} /> Add Spec
               </button>
@@ -281,7 +372,7 @@ function ProductFormContent() {
                     <button
                       type="button"
                       onClick={() => removeSpecRow(index)}
-                      className="text-[#6B7278] hover:text-[#C97066] p-1 transition-colors"
+                      className="text-[#6B7278] hover:text-[#C97066] p-1 transition-colors cursor-pointer"
                     >
                       <Trash2 size={14} />
                     </button>

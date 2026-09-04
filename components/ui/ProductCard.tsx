@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import AddToCartButton from "@/components/ui/AddToCartButton";
+import ProductDetailModal from "@/components/modals/ProductDetails";
 
 type ProductCardProps = {
   productId: number;
@@ -36,45 +40,59 @@ function ProductCard({
   imageUrl,
   altText,
 }: ProductCardProps) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   return (
-    <div className="group relative overflow-hidden rounded-sm border border-zinc-800 bg-zinc-900 transition-colors hover:border-zinc-700">
-      <div className="relative aspect-square bg-zinc-950">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={altText ?? name}
-            fill
-            className="object-contain "
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="font-mono text-[11px] uppercase tracking-widest text-zinc-700">
-              No image
-            </span>
-          </div>
-        )}
-        <span className="absolute left-2 top-2 rounded-sm border border-zinc-700 bg-zinc-900/90 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-zinc-400">
-          {category}
-        </span>
-      </div>
-
-      <div className="border-t border-zinc-800 p-3">
-        <h3 className="text-sm font-medium leading-snug text-zinc-100">
-          {name}
-        </h3>
-
-        <div className="mt-2 flex items-end justify-between">
-          <span className="font-mono text-lg font-semibold text-zinc-50">
-            ${Number(price).toFixed(2)}
+    <>
+      <div
+        onClick={() => setDetailsOpen(true)}
+        className="group relative cursor-pointer overflow-hidden rounded-sm border border-zinc-800 bg-zinc-900 transition-colors hover:border-zinc-700"
+      >
+        <div className="relative aspect-square bg-zinc-950">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={altText ?? name}
+              fill
+              className="object-contain"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="font-mono text-[11px] uppercase tracking-widest text-zinc-700">
+                No image
+              </span>
+            </div>
+          )}
+          <span className="absolute left-2 top-2 rounded-sm border border-zinc-700 bg-zinc-900/90 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-zinc-400">
+            {category}
           </span>
-          <StockIndicator stock={stock} />
         </div>
 
-        <div className="mt-3">
-          <AddToCartButton productId={productId} stock={stock} />
+        <div className="border-t border-zinc-800 p-3">
+          <h3 className="text-sm font-medium leading-snug text-zinc-100">
+            {name}
+          </h3>
+
+          <div className="mt-2 flex items-end justify-between">
+            <span className="font-mono text-lg font-semibold text-zinc-50">
+              ${Number(price).toFixed(2)}
+            </span>
+            <StockIndicator stock={stock} />
+          </div>
+
+          <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+            <AddToCartButton productId={productId} stock={stock} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {detailsOpen && (
+        <ProductDetailModal
+          productId={productId}
+          onClose={() => setDetailsOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

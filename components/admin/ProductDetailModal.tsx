@@ -1,6 +1,7 @@
 "use client";
 
-import { X, Package } from "lucide-react";
+import { X, Package, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 type Product = {
   id: number;
@@ -11,6 +12,7 @@ type Product = {
   category: string;
   category_id?: number;
   image_url: string | null;
+  images?: { url: string; sort_order?: number; alt_text?: string }[];
   description?: string;
   specs?: Record<string, any>;
 };
@@ -26,10 +28,38 @@ export default function ProductDetailsModal({
   onClose,
   product,
 }: ProductDetailsModalProps) {
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (product) {
+      if (Array.isArray(product.images) && product.images.length > 0) {
+        setImageUrls(product.images.map((img) => img.url).filter(Boolean));
+      } else if (product.image_url) {
+        setImageUrls([product.image_url]);
+      } else {
+        setImageUrls([]);
+      }
+    } else {
+      setImageUrls([]);
+    }
+    setCurrentIndex(0);
+  }, [product]);
+
   if (!isOpen || !product) return null;
 
   const lowStock = product.stock <= 5 && product.stock > 0;
   const outOfStock = product.stock === 0;
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
 
   return (
     <div
@@ -44,17 +74,48 @@ export default function ProductDetailsModal({
           <h2 className="text-sm font-bold text-[#F2F0EB] uppercase tracking-wider">
             Product Details
           </h2>
+          <button
+            onClick={onClose}
+            className="text-[#6B7278] cursor-pointer transition-colors hover:text-[#F2F0EB]"
+          >
+            <X size={16} />
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="flex flex-col">
-            <div className="w-full h-72 md:h-full min-h-70 overflow-hidden rounded-md border border-[#2A2F34] bg-zinc-950 flex items-center justify-center">
-              {product.image_url ? (
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                />
+            <div className="relative w-full h-72 md:h-full min-h-70 overflow-hidden rounded-md border border-[#2A2F34] bg-zinc-950 flex items-center justify-center">
+              {imageUrls.length > 0 ? (
+                <>
+                  <img
+                    src={imageUrls[currentIndex]}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                  />
+
+                  {imageUrls.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={prevImage}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={nextImage}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-zinc-900/80 border border-zinc-700 px-2 py-0.5 rounded-sm font-mono text-[10px] text-white">
+                        {currentIndex + 1} / {imageUrls.length}
+                      </div>
+                    </>
+                  )}
+                </>
               ) : (
                 <Package size={48} className="text-[#6B7278]" />
               )}

@@ -4,6 +4,7 @@ import { syncUser } from "@/lib/services/userService";
 import Link from "next/link";
 import Logo from "../../public/img/Logo.png";
 import ProfileMenu from "../ui/ProfileMenu";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 
 type NavbarProps = {
   showBackButton?: boolean;
@@ -19,6 +20,8 @@ const Navbar = async ({
   if (session) {
     await syncUser(session.user);
   }
+
+  const currentUser = session ? await getCurrentUser() : null;
 
   const initials = session?.user?.name
     ?.split(" ")
@@ -73,11 +76,11 @@ const Navbar = async ({
               />
             </Link>
 
-            <div className="h-5 w-px bg-zinc-800" />
+            <div className="h-8 w-px bg-zinc-800" />
           </div>
 
           {session ? (
-            <ProfileMenu session={session} initials={initials || "U"} />
+            <ProfileMenu session={session} initials={initials || "U"} role={currentUser?.role} />
           ) : (
             <a
               href="/auth/login"

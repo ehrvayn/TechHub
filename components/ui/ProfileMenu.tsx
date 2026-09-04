@@ -2,15 +2,20 @@
 
 import { useEffect, useState, useRef } from "react";
 import LogoutModal from "@/components/modals/logoutModal";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, LayoutDashboard, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 type ProfileMenuProps = {
   session: any;
   initials: string;
+  role?: string;
 };
 
-export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
+export default function ProfileMenu({
+  session,
+  initials,
+  role,
+}: ProfileMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -44,9 +49,14 @@ export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
               referrerPolicy="no-referrer"
               className="h-7 w-7 rounded-full object-cover transition-colors border border-zinc-700"
             />
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-zinc-100">
               {session.user.name?.split(" ")[0] ?? "Account"}
             </p>
+            {menuOpen ? (
+              <ChevronDown size={16} className="text-zinc-100 rotate-180" />
+            ) : (
+              <ChevronDown size={16} className="text-zinc-100" />
+            )}
           </div>
         </button>
       ) : (
@@ -60,6 +70,17 @@ export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
 
       {menuOpen && (
         <div className="absolute right-0 top-10 z-50 w-44 rounded-sm border border-zinc-800 bg-zinc-900 p-1.5 shadow-xl">
+          {role === "admin" && (
+            <Link
+              href="/admin"
+              onClick={() => setMenuOpen(false)}
+              className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800"
+            >
+              <LayoutDashboard size={16} className="text-zinc-400" />
+              <span>Dashboard</span>
+            </Link>
+          )}
+
           <Link
             href="/orders"
             onClick={() => setMenuOpen(false)}
@@ -68,6 +89,7 @@ export default function ProfileMenu({ session, initials }: ProfileMenuProps) {
             <ShoppingBag size={16} className="text-zinc-400" />
             <span>My purchases</span>
           </Link>
+
           <LogoutModal />
         </div>
       )}

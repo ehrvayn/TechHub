@@ -86,8 +86,17 @@ export const createProduct = async (
     const product = result.rows[0];
 
     if (imageUrl) {
-      const imgQuery = ProductsQuery.addProductImage(product.id, imageUrl);
-      await query(imgQuery.query, imgQuery.values);
+      const urls = imageUrl.includes(",")
+        ? imageUrl
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [imageUrl];
+
+      for (let i = 0; i < urls.length; i++) {
+        const imgQuery = ProductsQuery.addProductImage(product.id, urls[i], i);
+        await query(imgQuery.query, imgQuery.values);
+      }
     }
 
     return { success: true, product };

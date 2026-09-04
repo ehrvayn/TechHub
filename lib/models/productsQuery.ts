@@ -2,11 +2,23 @@ const ProductsQuery = {
   retrieveAll: () => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, c.name AS category,
-               pi.url AS image_url, pi.alt_text
+        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, p.created_at, c.name AS category,
+               COALESCE(
+                 JSON_AGG(
+                   JSON_BUILD_OBJECT('url', pi.url, 'sort_order', pi.sort_order, 'alt_text', pi.alt_text)
+                   ORDER BY pi.sort_order ASC, pi.id ASC
+                 ) FILTER (WHERE pi.id IS NOT NULL), '[]'
+               ) AS images,
+               (
+                 SELECT url FROM product_images 
+                 WHERE product_id = p.id 
+                 ORDER BY sort_order ASC, id ASC 
+                 LIMIT 1
+               ) AS image_url
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
-        LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.sort_order = 0
+        LEFT JOIN product_images pi ON pi.product_id = p.id
+        GROUP BY p.id, c.name
         ORDER BY p.created_at DESC
       `,
       values: [],
@@ -16,24 +28,30 @@ const ProductsQuery = {
   retrieveById: (productId: number) => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.price, p.stock, c.name AS category,
-               pi.url AS image_url, pi.alt_text
+        SELECT p.id, p.name, p.slug, p.price, p.stock, p.description, p.specs, c.name AS category,
+               COALESCE(
+                 JSON_AGG(
+                   JSON_BUILD_OBJECT('url', pi.url, 'sort_order', pi.sort_order, 'alt_text', pi.alt_text)
+                   ORDER BY pi.sort_order ASC, pi.id ASC
+                 ) FILTER (WHERE pi.id IS NOT NULL), '[]'
+               ) AS images
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
-        LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.sort_order = 0
+        LEFT JOIN product_images pi ON pi.product_id = p.id
         WHERE p.id = $1
+        GROUP BY p.id, c.name
       `,
       values: [productId],
     };
   },
 
-  addProductImage: (productId: number, url: string) => {
+  addProductImage: (productId: number, url: string, sortOrder: number = 0) => {
     return {
       query: `
-      INSERT INTO product_images (product_id, url)
-      VALUES ($1, $2)
-    `,
-      values: [productId, url],
+        INSERT INTO product_images (product_id, url, sort_order)
+        VALUES ($1, $2, $3)
+      `,
+      values: [productId, url, sortOrder],
     };
   },
 

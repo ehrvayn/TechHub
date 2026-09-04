@@ -14,11 +14,14 @@ export default async function CartPage() {
     <div className="flex min-h-screen flex-col bg-zinc-950">
       <Navbar showBackButton activeCart />
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10 sm:px-8">
-        <h2 className="mb-6 font-mono text-xs uppercase tracking-widest text-zinc-500">
-          Your Cart
-        </h2>
+        <h1 className="font-mono mb-3 text-lg uppercase tracking-widest text-zinc-300">
+          Cart
+        </h1>
         <CartClient />
       </main>
+      <footer className="border-t border-zinc-800/60 py-6 text-center font-mono text-xs text-zinc-600">
+        © {new Date().getFullYear()} TechHub. All rights reserved.
+      </footer>
     </div>
   );
 }

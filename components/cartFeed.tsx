@@ -104,15 +104,20 @@ function CartClient() {
 
   return (
     <div>
-      <div className="mb-3 flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={allSelected}
-          onChange={toggleSelectAll}
-          className="h-3.5 w-3.5 accent-emerald-400"
-        />
-        <span className="font-mono text-xs uppercase tracking-wide text-zinc-500">
-          Select all
+      <div className="mb-4 flex items-center justify-between rounded-sm border border-zinc-800/80 bg-zinc-950/60 px-4 py-3">
+        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onChange={toggleSelectAll}
+            className="h-3.5 w-3.5 rounded-none accent-emerald-400 cursor-pointer"
+          />
+          <span className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+            Select All ({items.length} {items.length === 1 ? "item" : "items"})
+          </span>
+        </label>
+        <span className="text-[11px] text-zinc-500">
+          {selectedIds.size} selected
         </span>
       </div>
 
@@ -139,9 +144,6 @@ function CartClient() {
         <div className="flex flex-col">
           <span className="font-mono text-xs text-zinc-500">
             Total ({selectedIds.size} selected)
-          </span>
-          <span className="font-mono text-lg font-semibold text-zinc-50">
-            ${selectedTotal.toFixed(2)}
           </span>
         </div>
         <button

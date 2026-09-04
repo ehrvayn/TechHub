@@ -33,6 +33,7 @@ type AdminProductContextType = {
   stock: string;
   categoryId: string;
   imageUrl: string;
+  setImageUrl: (val: string) => void;
   description: string;
   specRows: SpecRow[];
   uploading: boolean;
@@ -154,26 +155,39 @@ export function AdminProductProvider({
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploading(true);
     setError("");
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const currentUrls = imageUrl
+      ? imageUrl
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const newUrls = [...currentUrls];
 
     try {
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success && data.secure_url) {
-        setImageUrl(data.secure_url);
-      } else {
-        setError(data.message || "Upload failed.");
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append("file", files[i]);
+
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (data.success && data.secure_url) {
+          newUrls.push(data.secure_url);
+        } else {
+          setError(data.message || "Upload failed for one or more images.");
+        }
       }
+
+      setImageUrl(newUrls.join(", "));
     } catch {
       setError("Network error during image upload.");
     } finally {
@@ -209,7 +223,7 @@ export function AdminProductProvider({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
-        slug,
+        slug: finalSlug,
         price,
         stock,
         categoryId,
@@ -247,6 +261,7 @@ export function AdminProductProvider({
         stock,
         categoryId,
         imageUrl,
+        setImageUrl,
         description,
         specRows,
         uploading,
