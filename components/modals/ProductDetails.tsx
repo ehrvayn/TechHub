@@ -2,8 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { X, Loader2, ShoppingCart, Zap } from "lucide-react";
+import {
+  X,
+  Loader2,
+  ShoppingCart,
+  Zap,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import ReviewSection from "../ReviewSection";
 
 type ProductDetail = {
   id: number;
@@ -14,6 +22,7 @@ type ProductDetail = {
   stock: number;
   category: string;
   image_url: string | null;
+  images?: { url: string; sort_order?: number; alt_text?: string }[];
   alt_text: string | null;
   specs?: Record<string, any>;
 };
@@ -33,6 +42,8 @@ export default function ProductDetailModal({
   const [buyingNow, setBuyingNow] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,6 +54,21 @@ export default function ProductDetailModal({
     };
     fetchProduct();
   }, [productId]);
+
+  useEffect(() => {
+    if (product) {
+      if (Array.isArray(product.images) && product.images.length > 0) {
+        setImageUrls(product.images.map((img) => img.url).filter(Boolean));
+      } else if (product.image_url) {
+        setImageUrls([product.image_url]);
+      } else {
+        setImageUrls([]);
+      }
+    } else {
+      setImageUrls([]);
+    }
+    setCurrentIndex(0);
+  }, [product]);
 
   const handleAddToCart = async () => {
     setAdding(true);
@@ -81,6 +107,16 @@ export default function ProductDetailModal({
     }
   };
 
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
@@ -91,13 +127,9 @@ export default function ProductDetailModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-5 py-4">
-          <div className="flex justify-center items-center gap-3">
-            <div className="flex items-center justify-between">
-              <span className="rounded-sm border border-zinc-700 bg-zinc-800/60 px-1.5 py-0.5 uppercase tracking-wider text-zinc-400">
-                {product?.category}
-              </span>
-            </div>
-          </div>
+          <span className="rounded-sm border border-zinc-700 bg-zinc-800/60 px-1.5 py-0.5 uppercase tracking-wider text-zinc-400">
+            {product?.category}
+          </span>
           <button
             onClick={onClose}
             className="text-zinc-500 hover:text-zinc-300 cursor-pointer"
@@ -112,28 +144,53 @@ export default function ProductDetailModal({
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-2">
-            <div className="relative aspect-square rounded-sm bg-zinc-950 border border-zinc-800 overflow-hidden">
-              {product.image_url ? (
-                <Image
-                  src={product.image_url}
-                  alt={product.alt_text ?? product.name}
-                  fill
-                  className="object-contain p-4"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center">
-                  <span className="uppercase text-zinc-700">No image</span>
-                </div>
-              )}
+            <div>
+              <div className="relative aspect-square rounded-sm bg-zinc-950 border border-zinc-800 overflow-hidden">
+                {imageUrls.length > 0 ? (
+                  <>
+                    <Image
+                      src={imageUrls[currentIndex]}
+                      alt={product.alt_text ?? product.name}
+                      fill
+                      className="object-contain p-4"
+                    />
+                    {imageUrls.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={prevImage}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                        >
+                          <ChevronLeft size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={nextImage}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full transition-colors border border-zinc-700 cursor-pointer"
+                        >
+                          <ChevronRight size={16} />
+                        </button>
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-zinc-900/80 border border-zinc-700 px-2 py-0.5 rounded-sm font-mono text-[10px] text-white">
+                          {currentIndex + 1} / {imageUrls.length}
+                        </div>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="uppercase text-zinc-700">No image</span>
+                  </div>
+                )}
+              </div>
+
+              <ReviewSection productId={product.id} />
             </div>
 
             <div className="flex flex-col justify-between space-y-4">
               <div className="space-y-2">
-                <div>
-                  <h1 className="text-base font-semibold text-zinc-100">
-                    {product.name}
-                  </h1>
-                </div>
+                <h1 className="text-base font-semibold text-zinc-100">
+                  {product.name}
+                </h1>
 
                 <div className="flex items-baseline justify-between rounded-sm border border-zinc-800 bg-zinc-950 p-3">
                   <span className="text-xl font-bold text-zinc-50">

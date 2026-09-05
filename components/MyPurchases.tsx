@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, PackageX } from "lucide-react";
-import OrderItemCard from "@/components/ui/orderItemCard";
+import { Loader2, PackageX, ChevronDown } from "lucide-react";
+import OrderCard from "./ui/orderCard";
 import OrderDetailModal from "@/components/modals/OrderDetailModal";
 
 type OrderItem = {
@@ -16,12 +16,17 @@ type OrderItem = {
   image_url: string | null;
 };
 
-type TabType = "all" | "pending" | "completed";
+type GroupedOrder = {
+  order_id: number;
+  status: string;
+  items: OrderItem[];
+  totalAmount: number;
+};
 
 export default function MyPurchases() {
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
 
   const fetchOrders = async () => {
@@ -40,19 +45,38 @@ export default function MyPurchases() {
     fetchOrders();
   }, []);
 
-  const pendingItems = items.filter(
-    (item) => item.status.toLowerCase() === "pending",
-  );
-  const completedItems = items.filter(
-    (item) => item.status.toLowerCase() !== "pending",
+  const groupedOrdersMap = items.reduce(
+    (acc, item) => {
+      const orderId = item.order_id;
+      if (!acc[orderId]) {
+        acc[orderId] = {
+          order_id: orderId,
+          status: item.status,
+          items: [],
+          totalAmount: 0,
+        };
+      }
+      acc[orderId].items.push(item);
+      acc[orderId].totalAmount += Number(item.price) * Number(item.quantity);
+      return acc;
+    },
+    {} as Record<number, GroupedOrder>,
   );
 
-  const filteredItems =
-    activeTab === "pending"
-      ? pendingItems
-      : activeTab === "completed"
-        ? completedItems
-        : items;
+  const allOrders = Object.values(groupedOrdersMap).sort(
+    (a, b) => b.order_id - a.order_id,
+  );
+
+  const availableStatuses = Array.from(
+    new Set(allOrders.map((order) => order.status.toLowerCase())),
+  ).filter((status) => status !== "paid");
+
+  const filteredOrders =
+    filterStatus === "all"
+      ? allOrders.filter((order) => order.status.toLowerCase() !== "paid")
+      : allOrders.filter(
+          (order) => order.status.toLowerCase() === filterStatus,
+        );
 
   if (loading) {
     return (
@@ -69,64 +93,59 @@ export default function MyPurchases() {
           My Purchases
         </h2>
 
-        <div className="flex gap-1 rounded-lg border border-zinc-800 bg-zinc-900/60 p-1">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`rounded-md px-3 py-1.5 font-mono text-xs font-medium transition-all ${
-              activeTab === "all"
-                ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
+        <div className="relative inline-block">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="appearance-none rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 pr-8 font-mono text-xs font-medium text-zinc-300 outline-none transition-colors hover:border-zinc-700 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 cursor-pointer"
           >
-            All ({items.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("pending")}
-            className={`rounded-md px-3 py-1.5 font-mono text-xs font-medium transition-all ${
-              activeTab === "pending"
-                ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            Pending ({pendingItems.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("completed")}
-            className={`rounded-md px-3 py-1.5 font-mono text-xs font-medium transition-all ${
-              activeTab === "completed"
-                ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            Paid ({completedItems.length})
-          </button>
+            <option value="all">
+              All Orders (
+              {
+                allOrders.filter((o) => o.status.toLowerCase() !== "paid")
+                  .length
+              }
+              )
+            </option>
+            {availableStatuses.map((status) => {
+              const count = allOrders.filter(
+                (o) => o.status.toLowerCase() === status,
+              ).length;
+              return (
+                <option
+                  key={status}
+                  value={status}
+                  className="bg-zinc-900 text-zinc-300 capitalize"
+                >
+                  {status.charAt(0).toUpperCase() + status.slice(1)} ({count})
+                </option>
+              );
+            })}
+          </select>
+          <ChevronDown
+            size={14}
+            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400"
+          />
         </div>
       </div>
 
-      {filteredItems.length === 0 ? (
+      {filteredOrders.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-800 py-16 text-center">
           <PackageX className="mb-2 h-8 w-8 text-zinc-600" />
-          <p className="font-mono text-sm text-zinc-400">No items found</p>
+          <p className="font-mono text-sm text-zinc-400">No orders found</p>
           <p className="text-xs text-zinc-600">
-            {activeTab === "pending"
-              ? "You have no pending orders right now."
-              : activeTab === "completed"
-                ? "You have no completed or paid purchases yet."
-                : "Your purchase history is empty."}
+            {filterStatus === "all"
+              ? "Your purchase history is empty."
+              : `You have no orders with status "${filterStatus}".`}
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {filteredItems.map((item) => (
-            <OrderItemCard
-              key={item.id}
-              id={item.id}
-              name={item.product_name}
-              price={Number(item.price)}
-              quantity={item.quantity}
-              status={item.status}
-              imageUrl={item.image_url}
-              onClick={() => setSelectedOrderId(item.order_id)}
+        <div className="flex flex-col gap-4">
+          {filteredOrders.map((order) => (
+            <OrderCard
+              key={order.order_id}
+              order={order}
+              onClick={() => setSelectedOrderId(order.order_id)}
             />
           ))}
         </div>

@@ -74,7 +74,7 @@ export default function AdminOrderCard({
       return "bg-purple-400/10 text-purple-400 border-purple-400/30";
     if (s === "out for delivery")
       return "bg-cyan-400/10 text-cyan-400 border-cyan-400/30";
-    if (s === "completed" || s === "paid" || s === "delivered")
+    if (s === "delivered" || s === "paid" || s === "delivered")
       return "bg-emerald-400/10 text-emerald-400 border-emerald-400/30";
     if (s === "cancelled")
       return "bg-rose-400/10 text-rose-400 border-rose-400/30";
@@ -87,8 +87,8 @@ export default function AdminOrderCard({
     if (s === "processing")
       return <Loader2 size={12} className="animate-spin" />;
     if (s === "dispatched" || s === "transit") return <Truck size={12} />;
-    if (s === "out_for_delivery") return <MapPin size={12} />;
-    if (s === "completed" || s === "paid" || s === "delivered")
+    if (s === "out for delivery") return <MapPin size={12} />;
+    if (s === "delivered" || s === "paid" || s === "delivered")
       return <Check size={12} />;
     if (s === "cancelled") return <X size={12} />;
     return null;
@@ -137,8 +137,8 @@ export default function AdminOrderCard({
                   <option value="processing">Processing</option>
                   <option value="dispatched">Dispatched</option>
                   <option value="transit">Transit</option>
-                  <option value="out_for_delivery">Out for Delivery</option>
-                  <option value="completed">Completed</option>
+                  <option value="out for delivery">Out for Delivery</option>
+                  <option value="delivered">Delivered</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
                 <button

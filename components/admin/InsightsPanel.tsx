@@ -3,7 +3,6 @@ const STATUS_COLOR: Record<string, string> = {
   paid: "bg-[#7A9CC6]",
   preparing: "bg-[#B08FC7]",
   shipped: "bg-[#6FA8C9]",
-  completed: "bg-[#8FAE8B]",
   delivered: "bg-[#8FAE8B]",
   cancelled: "bg-[#C97066]",
 };

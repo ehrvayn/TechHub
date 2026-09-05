@@ -96,11 +96,11 @@ export default function AdminOrdersFeed() {
     else if (selectedSort === "dispatched")
       matchesSort = itemStatus === "dispatched";
     else if (selectedSort === "transit") matchesSort = itemStatus === "transit";
-    else if (selectedSort === "out_for_delivery")
-      matchesSort = itemStatus === "out_for_delivery";
-    else if (selectedSort === "completed")
+    else if (selectedSort === "out for delivery")
+      matchesSort = itemStatus === "out for delivery";
+    else if (selectedSort === "delivered")
       matchesSort =
-        itemStatus === "completed" ||
+        itemStatus === "delivered" ||
         itemStatus === "paid" ||
         itemStatus === "delivered";
     else if (selectedSort === "cancelled")
@@ -169,8 +169,8 @@ export default function AdminOrdersFeed() {
             <option value="processing">Processing</option>
             <option value="dispatched">Dispatched</option>
             <option value="transit">In Transit</option>
-            <option value="out_for_delivery">Out for Delivery</option>
-            <option value="completed">Completed</option>
+            <option value="out for delivery">Out for Delivery</option>
+            <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
             <option value="oldest">Oldest</option>
           </select>

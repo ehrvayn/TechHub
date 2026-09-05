@@ -14,7 +14,6 @@ const STATUS_STYLE: Record<string, string> = {
   paid: "bg-[#7A9CC6]/10 text-[#7A9CC6] ring-1 ring-[#7A9CC6]/30",
   preparing: "bg-[#B08FC7]/10 text-[#B08FC7] ring-1 ring-[#B08FC7]/30",
   shipped: "bg-[#6FA8C9]/10 text-[#6FA8C9] ring-1 ring-[#6FA8C9]/30",
-  completed: "bg-[#8FAE8B]/10 text-[#8FAE8B] ring-1 ring-[#8FAE8B]/30",
   delivered: "bg-[#8FAE8B]/10 text-[#8FAE8B] ring-1 ring-[#8FAE8B]/30",
   cancelled: "bg-[#C97066]/10 text-[#C97066] ring-1 ring-[#C97066]/30",
   "out for delivery": "bg-cyan-400/10 text-cyan-400 ring-1 ring-cyan-500/30",

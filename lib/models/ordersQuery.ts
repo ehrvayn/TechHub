@@ -81,7 +81,26 @@ const OrdersQuery = {
 
   getOrderItems: (orderId: number) => {
     return {
-      query: `SELECT * FROM order_items WHERE order_id = $1`,
+      query: `
+      SELECT 
+        oi.id,
+        oi.order_id,
+        oi.product_id,
+        oi.product_name,
+        oi.price,
+        oi.quantity,
+        (oi.price * oi.quantity) AS subtotal,
+        pi.url AS image_url
+      FROM order_items oi
+      LEFT JOIN LATERAL (
+        SELECT url 
+        FROM product_images 
+        WHERE product_id = oi.product_id 
+        ORDER BY sort_order ASC, id ASC 
+        LIMIT 1
+      ) pi ON true
+      WHERE oi.order_id = $1
+    `,
       values: [orderId],
     };
   },

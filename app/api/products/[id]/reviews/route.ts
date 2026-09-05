@@ -1,0 +1,20 @@
+import {
+  handleGetReviews,
+  handleSubmitReview,
+} from "@/lib/controllers/reviewController";
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  return handleGetReviews(Number(id));
+}
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  return handleSubmitReview(Number(id), request);
+}
