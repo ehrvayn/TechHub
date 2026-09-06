@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import StarRating from "@/components/ui/StarRating";
+import { Loader2 } from "lucide-react";
 
 type Review = {
   id: number;
@@ -9,6 +10,9 @@ type Review = {
   comment: string | null;
   created_at: string;
   email: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string | null;
 };
 
 export default function ReviewSection({ productId }: { productId: number }) {
@@ -17,122 +21,92 @@ export default function ReviewSection({ productId }: { productId: number }) {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
-
-  const fetchReviews = async () => {
-    const res = await fetch(`/api/products/${productId}/reviews`);
-    const data = await res.json();
-    if (data.success) {
-      setReviews(data.reviews);
-      setAverage(data.average);
-      setCount(data.count);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchReviews = async () => {
+      const res = await fetch(`/api/products/${productId}/reviews`);
+      const data = await res.json();
+      if (data.success) {
+        setReviews(data.reviews);
+        setAverage(data.average);
+        setCount(data.count);
+      }
+      setLoading(false);
+    };
     fetchReviews();
   }, [productId]);
 
-  const handleSubmit = async () => {
-    setError("");
-    if (rating === 0) {
-      setError("Select a star rating first.");
-      return;
-    }
-
-    setSubmitting(true);
-    const res = await fetch(`/api/products/${productId}/reviews`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, comment }),
-    });
-    const result = await res.json();
-    setSubmitting(false);
-
-    if (!result.success) {
-      setError(result.message);
-      return;
-    }
-
-    setRating(0);
-    setComment("");
-    fetchReviews();
-  };
-
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="mt-4 flex justify-center py-6">
+        <Loader2 size={16} className="animate-spin text-zinc-700" />
+      </div>
+    );
+  }
 
   return (
-    <div className="mt-6 border-t border-zinc-800 pt-5">
-      <div className="mb-4 flex items-center gap-2">
-        <StarRating rating={average} size={16} />
-        <span className="font-mono text-sm text-zinc-300">
+    <div className="mt-4 rounded-sm border border-zinc-800 bg-zinc-950">
+      <div className="flex items-center gap-4 border-b border-zinc-800 px-3 py-3">
+        <span className="font-mono text-2xl font-bold text-zinc-50">
           {average.toFixed(1)}
         </span>
-        <span className="font-mono text-xs text-zinc-500">
-          ({count} reviews)
-        </span>
-      </div>
-
-      <div className="mb-5 flex flex-col gap-2 rounded-sm border border-zinc-800 bg-zinc-950 p-3">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
-          Leave a review
-        </p>
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button key={star} onClick={() => setRating(star)}>
-              <svg
-                width={20}
-                height={20}
-                viewBox="0 0 20 20"
-                fill={star <= rating ? "#D1A053" : "none"}
-                stroke="#D1A053"
-                strokeWidth="1"
-              >
-                <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9 4.8 17.6l1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
-              </svg>
-            </button>
-          ))}
+        <div className="flex flex-col gap-0.5">
+          <StarRating rating={average} size={13} />
+          <span className="font-mono text-[10px] uppercase tracking-wide text-zinc-500">
+            {count} {count === 1 ? "review" : "reviews"}
+          </span>
         </div>
-        <textarea
-          placeholder="Optional comment"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          rows={2}
-          className="rounded-sm border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-emerald-400/50"
-        />
-        {error && <p className="text-xs text-red-400">{error}</p>}
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className="w-fit rounded-sm bg-emerald-400 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 hover:bg-emerald-300 disabled:opacity-50"
-        >
-          {submitting ? "Submitting..." : "Submit Review"}
-        </button>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {reviews.length === 0 ? (
-          <p className="text-sm text-zinc-500">No reviews yet.</p>
-        ) : (
-          reviews.map((r) => (
-            <div key={r.id} className="border-b border-zinc-800 pb-3">
-              <div className="flex items-center gap-2">
-                <StarRating rating={r.rating} size={13} />
-                <span className="font-mono text-xs text-zinc-500">
-                  {r.email}
-                </span>
+      {reviews.length === 0 ? (
+        <p className="px-3 py-4 font-mono text-xs text-zinc-600">
+          No reviews yet — be the first to leave one after your purchase.
+        </p>
+      ) : (
+        <div className="max-h-56 divide-y divide-zinc-800 overflow-y-auto">
+          {reviews.map((r) => {
+            const initials =
+              `${r.first_name?.[0] ?? ""}${r.last_name?.[0] ?? ""}`.toUpperCase();
+
+            return (
+              <div key={r.id} className="flex gap-2.5 px-3 py-2.5">
+                {r.avatar_url ? (
+                  <img
+                    src={r.avatar_url}
+                    alt={`${r.first_name} ${r.last_name}`}
+                    referrerPolicy="no-referrer"
+                    className="h-7 w-7 shrink-0 rounded-full border border-zinc-800 object-cover"
+                  />
+                ) : (
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400/10 font-mono text-[10px] font-semibold text-emerald-400 ring-1 ring-emerald-400/30">
+                    {initials || "U"}
+                  </div>
+                )}
+
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <StarRating rating={r.rating} size={12} />
+                    <span className="font-mono text-[10px] text-zinc-600">
+                      {new Date(r.created_at).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <p className="mt-1 font-mono text-[10px] text-zinc-500">
+                    {r.first_name} {r.last_name}
+                  </p>
+                  {r.comment && (
+                    <p className="mt-1.5 font-sans text-xs leading-relaxed text-zinc-400">
+                      {r.comment}
+                    </p>
+                  )}
+                </div>
               </div>
-              {r.comment && (
-                <p className="mt-1 text-sm text-zinc-300">{r.comment}</p>
-              )}
-            </div>
-          ))
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

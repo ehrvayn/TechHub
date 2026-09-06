@@ -54,9 +54,11 @@ export const checkout = async (input: CheckoutInput) => {
           item.quantity,
         );
       await query(itemSql, itemValues);
-    }
 
-    for (const item of selectedItems) {
+      const { query: incSql, values: incValues } =
+        OrdersQuery.incrementTotalSold(item.product_id, item.quantity);
+      await query(incSql, incValues);
+
       const { query: delSql, values: delValues } = CartQuery.deleteItem(
         item.id,
       );
@@ -69,5 +71,3 @@ export const checkout = async (input: CheckoutInput) => {
     return { success: false, message: "Something went wrong!" };
   }
 };
-
-

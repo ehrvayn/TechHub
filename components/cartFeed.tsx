@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import CartItemCard from "@/components/ui/cartItemCard";
 import { useRouter } from "next/navigation";
+import { useCartCount } from "@/context/CartCountContext";
 
 type CartItem = {
   id: number;
@@ -21,6 +22,7 @@ function CartClient() {
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const router = useRouter();
+  const { refreshCount } = useCartCount();
 
   const fetchCart = async () => {
     const res = await fetch("/api/cart");
@@ -63,6 +65,7 @@ function CartClient() {
     });
     await fetchCart();
     setUpdatingId(null);
+    await refreshCount();
   };
 
   const removeItem = async (id: number) => {
@@ -75,6 +78,7 @@ function CartClient() {
       next.delete(id);
       return next;
     });
+    await refreshCount();
   };
 
   if (loading) {
@@ -141,9 +145,12 @@ function CartClient() {
       </div>
 
       <div className="mt-6 flex items-center justify-between border-t border-zinc-800 pt-4">
-        <div className="flex flex-col">
+        <div className="flex justify-center items-center gap-1">
           <span className="font-mono text-xs text-zinc-500">
-            Total ({selectedIds.size} selected)
+            Total:
+          </span>
+          <span className="font-mono text-base font-bold text-emerald-400">
+            ${selectedTotal.toFixed(2)}
           </span>
         </div>
         <button

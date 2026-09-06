@@ -11,7 +11,7 @@ type SubNavProps = {
 };
 
 const CATEGORIES = [
-  { label: "All", slug: "all" },
+  { label: "All Categories", slug: "all" },
   { label: "CPU", slug: "cpu" },
   { label: "GPU", slug: "gpu" },
   { label: "RAM", slug: "ram" },
@@ -23,11 +23,8 @@ const CATEGORIES = [
 ];
 
 const QUICK_LINKS = [
-  "Featured",
   "Bestsellers",
   "New Arrivals",
-  "Top Deals",
-  "Top Brands",
 ];
 
 export default function SubNav({
@@ -48,7 +45,7 @@ export default function SubNav({
           <Menu size={14} />
           <span>
             {activeQuickLink
-              ? "All"
+              ? "All Categories"
               : CATEGORIES.find((c) => c.slug === selectedCategory)?.label ||
                 "All Categories"}
           </span>

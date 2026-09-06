@@ -5,9 +5,13 @@ import { Star, Check, Loader2 } from "lucide-react";
 
 type ItemReviewFormProps = {
   productId: number;
+  is_reviewed: boolean;
 };
 
-export function ItemReviewForm({ productId }: ItemReviewFormProps) {
+export function ItemReviewForm({
+  productId,
+  is_reviewed,
+}: ItemReviewFormProps) {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -38,15 +42,17 @@ export function ItemReviewForm({ productId }: ItemReviewFormProps) {
     setSubmitted(true);
   };
 
-  if (submitted) {
+  // 1. Show 'Product rated' badge if already reviewed in DB or just submitted locally
+  if (is_reviewed || submitted) {
     return (
       <div className="mt-3 flex items-center gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 font-mono text-xs text-emerald-400">
         <Check size={14} />
-        <span>Review submitted successfully</span>
+        <span>Product rated</span>
       </div>
     );
   }
 
+  // 2. Show toggle button if form is closed
   if (!open) {
     return (
       <button
@@ -59,17 +65,19 @@ export function ItemReviewForm({ productId }: ItemReviewFormProps) {
     );
   }
 
+  // 3. Render review form when open
   return (
     <div className="mt-3 flex flex-col gap-3 rounded-lg border border-zinc-800 bg-zinc-950/80 p-3.5">
       <div className="flex items-center justify-between">
         <span className="font-mono text-xs text-zinc-400">Your Rating</span>
-        <div className="flex gap-1">
+        <div className="flex gap-1" onMouseLeave={() => setHoverRating(0)}>
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
-              className="p-0.5 transition-transform hover:scale-110 active:scale-80 focus:outline-none"
+              className="p-0.5 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
               onClick={() => setRating(star)}
+              onMouseEnter={() => setHoverRating(star)}
             >
               <Star
                 size={16}

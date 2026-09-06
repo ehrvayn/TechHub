@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   Loader2,
-  Plus,
   Pencil,
   Trash2,
   ArrowUpDown,
@@ -18,6 +17,8 @@ type Product = {
   slug: string;
   price: number;
   stock: number;
+  total_sold?: number;
+  totalSold?: number;
   category: string;
   category_id?: number;
   image_url: string | null;
@@ -140,13 +141,16 @@ export default function InventoryTable({}: InventoryTableProps) {
             <span className="flex-1">Name</span>
             <span className="w-28">Category</span>
             <span className="w-20 text-right">Price</span>
-            <span className="w-20 text-right">Stock</span>
+            <span className="w-16 text-right">Sold</span>
+            <span className="w-16 text-right">Stock</span>
             <span className="w-24 text-right">Actions</span>
           </div>
           <div className="divide-y divide-[#2A2F34]">
             {filteredProducts.map((p) => {
               const lowStock = p.stock <= 5 && p.stock > 0;
               const outOfStock = p.stock === 0;
+              const soldCount = p.total_sold ?? p.totalSold ?? 0;
+
               return (
                 <div
                   key={p.id}
@@ -171,8 +175,11 @@ export default function InventoryTable({}: InventoryTableProps) {
                   <span className="w-20 text-right font-mono text-sm tabular-nums text-[#F2F0EB]">
                     ${Number(p.price).toFixed(2)}
                   </span>
+                  <span className="w-16 text-right font-mono text-sm tabular-nums text-[#6B7278]">
+                    {soldCount.toLocaleString()}
+                  </span>
                   <span
-                    className={`w-20 text-right font-mono text-sm font-semibold tabular-nums ${
+                    className={`w-16 text-right font-mono text-sm font-semibold tabular-nums ${
                       outOfStock
                         ? "text-[#C97066]"
                         : lowStock

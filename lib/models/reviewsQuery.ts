@@ -37,12 +37,13 @@ const ReviewsQuery = {
   getReviewsByProduct: (productId: number) => {
     return {
       query: `
-        SELECT r.id, r.rating, r.comment, r.created_at, u.email
-        FROM reviews r
-        JOIN users u ON r.user_id = u.id
-        WHERE r.product_id = $1
-        ORDER BY r.created_at DESC
-      `,
+      SELECT r.id, r.rating, r.comment, r.created_at,
+             u.first_name, u.last_name, u.email, u.avatar_url
+      FROM reviews r
+      JOIN users u ON r.user_id = u.id
+      WHERE r.product_id = $1
+      ORDER BY r.created_at DESC
+    `,
       values: [productId],
     };
   },

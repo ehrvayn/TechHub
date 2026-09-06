@@ -90,7 +90,14 @@ const OrdersQuery = {
         oi.price,
         oi.quantity,
         (oi.price * oi.quantity) AS subtotal,
-        pi.url AS image_url
+        pi.url AS image_url,
+        EXISTS (
+          SELECT 1 
+          FROM reviews r 
+          JOIN orders o ON o.id = oi.order_id
+          WHERE r.product_id = oi.product_id 
+            AND r.user_id = o.user_id
+        ) AS is_reviewed
       FROM order_items oi
       LEFT JOIN LATERAL (
         SELECT url 
@@ -150,7 +157,20 @@ const OrdersQuery = {
 
   updateOrderStatus: (orderId: number, status: string) => {
     return {
-      query: `UPDATE orders SET status = $1 WHERE id = $2 RETURNING *`,
+      query: `
+      WITH updated_order AS (
+          UPDATE orders
+          SET status = $1
+          WHERE id = $2
+          RETURNING *
+        )
+        SELECT 
+          uo.id AS order_id,
+          uo.status,
+          oi.product_id,
+          oi.quantity
+        FROM updated_order uo
+        JOIN order_items oi ON oi.order_id = uo.id;`,
       values: [status, orderId],
     };
   },
@@ -180,6 +200,32 @@ const OrdersQuery = {
       ORDER BY day ASC
     `,
       values: [],
+    };
+  },
+
+  incrementTotalSold: (productId: number, quantity: number) => {
+    return {
+      query: `
+      UPDATE products
+      SET total_sold = total_sold + $2,
+          stock = GREATEST(0, stock - $2)
+      WHERE id = $1
+      RETURNING *
+    `,
+      values: [productId, quantity],
+    };
+  },
+
+  decrementTotalSold: (productId: number, quantity: number) => {
+    return {
+      query: `
+      UPDATE products
+      SET total_sold = GREATEST(0, total_sold - $2),
+          stock = stock + $2
+      WHERE id = $1
+      RETURNING *
+    `,
+      values: [productId, quantity],
     };
   },
 };

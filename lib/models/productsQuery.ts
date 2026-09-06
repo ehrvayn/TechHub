@@ -2,7 +2,7 @@ const ProductsQuery = {
   retrieveAll: () => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, p.created_at, c.name AS category,
+        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, p,total_sold, p.created_at, c.name AS category,
                COALESCE(
                  JSON_AGG(
                    JSON_BUILD_OBJECT('url', pi.url, 'sort_order', pi.sort_order, 'alt_text', pi.alt_text)
@@ -14,7 +14,9 @@ const ProductsQuery = {
                  WHERE product_id = p.id 
                  ORDER BY sort_order ASC, id ASC 
                  LIMIT 1
-               ) AS image_url
+               ) AS image_url,
+              (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.id) AS avg_rating,
+              (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS review_count
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
         LEFT JOIN product_images pi ON pi.product_id = p.id
@@ -28,7 +30,7 @@ const ProductsQuery = {
   retrieveById: (productId: number) => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.price, p.stock, p.description, p.specs, c.name AS category,
+        SELECT p.id, p.name, p.slug, p.price, p.stock, p,total_sold, p.description, p.specs, c.name AS category,
                COALESCE(
                  JSON_AGG(
                    JSON_BUILD_OBJECT('url', pi.url, 'sort_order', pi.sort_order, 'alt_text', pi.alt_text)
@@ -103,6 +105,7 @@ const ProductsQuery = {
       values: [productId],
     };
   },
+
 };
 
 export default ProductsQuery;

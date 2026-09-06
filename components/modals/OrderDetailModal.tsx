@@ -31,6 +31,7 @@ export type OrderItem = {
   price: number;
   quantity: number;
   image_url?: string | null;
+  is_reviewed: boolean;
 };
 
 export type OrderDetailModalProps = {
@@ -216,7 +217,10 @@ export default function OrderDetailModal({
                           </span>
                         </div>
                         {isDelivered && (
-                          <ItemReviewForm productId={item.product_id} />
+                          <ItemReviewForm
+                            productId={item.product_id}
+                            is_reviewed={item.is_reviewed}
+                          />
                         )}
                       </div>
                     ))}

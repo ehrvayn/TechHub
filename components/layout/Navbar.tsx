@@ -1,10 +1,11 @@
-import { ShoppingCart, Search, ArrowLeft } from "lucide-react";
+import { Search, ArrowLeft } from "lucide-react";
 import { auth0 } from "@/lib/auth/auth0";
 import { syncUser } from "@/lib/services/userService";
 import Link from "next/link";
 import Logo from "../../public/img/Logo.png";
 import ProfileMenu from "../ui/ProfileMenu";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
+import CartIconWithBadge from "@/components/ui/CartIconWithBadge";
 
 type NavbarProps = {
   showBackButton?: boolean;
@@ -65,22 +66,17 @@ const Navbar = async ({
 
         <div className="flex shrink-0 items-center gap-5">
           <div className="flex items-center gap-5">
-            <Link href="/cart">
-              <ShoppingCart
-                size={20}
-                className={`cursor-pointer transition-colors ${
-                  activeCart
-                    ? "text-emerald-400"
-                    : "text-zinc-400 hover:text-zinc-100"
-                }`}
-              />
-            </Link>
+            <CartIconWithBadge activeCart={activeCart} />
 
             <div className="h-8 w-px bg-zinc-800" />
           </div>
 
           {session ? (
-            <ProfileMenu session={session} initials={initials || "U"} role={currentUser?.role} />
+            <ProfileMenu
+              session={session}
+              initials={initials || "U"}
+              role={currentUser?.role}
+            />
           ) : (
             <a
               href="/auth/login"

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import AddToCartButton from "@/components/ui/AddToCartButton";
 import ProductDetailModal from "@/components/modals/ProductDetails";
+import StarRating from "@/components/ui/StarRating";
 
 type ProductCardProps = {
   productId: number;
@@ -11,8 +12,11 @@ type ProductCardProps = {
   price: number;
   category: string;
   stock?: number;
+  totalSold?: number;
   imageUrl: string | null;
   altText: string | null;
+  avgRating?: number;
+  reviewCount?: number;
 };
 
 function StockIndicator({ stock }: { stock: number }) {
@@ -23,7 +27,6 @@ function StockIndicator({ stock }: { stock: number }) {
 
   return (
     <div className="flex items-center gap-1.5">
-      <span className={`h-1.5 w-1.5 rounded-full ${status.color}`} />
       <span className="text-[11px] font-mono uppercase tracking-wide text-zinc-500">
         {status.label}
       </span>
@@ -37,8 +40,11 @@ function ProductCard({
   price,
   category,
   stock = 0,
+  totalSold = 0,
   imageUrl,
   altText,
+  avgRating = 0,
+  reviewCount = 0,
 }: ProductCardProps) {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -54,6 +60,7 @@ function ProductCard({
               src={imageUrl}
               alt={altText ?? name}
               fill
+              sizes="1"
               className="object-contain"
             />
           ) : (
@@ -72,6 +79,17 @@ function ProductCard({
           <h3 className="text-sm font-medium leading-snug text-zinc-100">
             {name}
           </h3>
+
+          <div className="mt-1 flex items-center gap-1.5">
+            <StarRating rating={avgRating} size={11} />
+            <span className="font-mono text-[10px] text-zinc-600">
+              {reviewCount > 0 ? `(${reviewCount})` : "No reviews"}
+            </span>
+            <span className="text-zinc-700">|</span>
+            <span className="font-mono text-[10px] text-zinc-500">
+              {totalSold} sold
+            </span>
+          </div>
 
           <div className="mt-2 flex items-end justify-between">
             <span className="font-mono text-lg font-semibold text-zinc-50">

@@ -9,6 +9,8 @@ type Product = {
   slug: string;
   price: number;
   stock: number;
+  total_sold?: number;
+  totalSold?: number;
   category: string;
   category_id?: number;
   image_url: string | null;
@@ -50,6 +52,7 @@ export default function ProductDetailsModal({
 
   const lowStock = product.stock <= 5 && product.stock > 0;
   const outOfStock = product.stock === 0;
+  const soldCount = product.total_sold ?? product.totalSold ?? 0;
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -153,6 +156,12 @@ export default function ProductDetailsModal({
                   <span className="text-[#6B7278] uppercase">Price:</span>
                   <span className="text-[#F2F0EB] font-semibold text-right">
                     ${Number(product.price).toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#6B7278] uppercase">Total Sold:</span>
+                  <span className="text-[#F2F0EB] font-semibold text-right">
+                    {soldCount.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">

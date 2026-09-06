@@ -73,6 +73,14 @@ export const updateOrderStatus = async (orderId: number, status: string) => {
       return { success: false, message: "Order not found." };
     }
 
+    if (status === "cancelled") {
+      for (const item of result.rows) {
+        const { query: decSql, values: decValues } =
+          OrdersQuery.decrementTotalSold(item.product_id, item.quantity);
+        await query(decSql, decValues);
+      }
+    }
+
     return { success: true, order: result.rows[0] };
   } catch (error) {
     console.log(error);

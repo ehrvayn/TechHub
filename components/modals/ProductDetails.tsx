@@ -20,6 +20,8 @@ type ProductDetail = {
   description: string | null;
   price: number;
   stock: number;
+  total_sold?: number;
+  totalSold?: number;
   category: string;
   image_url: string | null;
   images?: { url: string; sort_order?: number; alt_text?: string }[];
@@ -117,6 +119,8 @@ export default function ProductDetailModal({
     setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
   };
 
+  const soldCount = product?.total_sold ?? product?.totalSold ?? 0;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
@@ -196,15 +200,24 @@ export default function ProductDetailModal({
                   <span className="text-xl font-bold text-zinc-50">
                     ${Number(product.price).toFixed(2)}
                   </span>
-                  <span
-                    className={`font-semibold ${
-                      product.stock === 0 ? "text-red-400" : "text-emerald-400"
-                    }`}
-                  >
-                    {product.stock === 0
-                      ? "Out of stock"
-                      : `${product.stock} left`}
-                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] text-zinc-500">
+                      {soldCount.toLocaleString()} sold
+                    </span>
+                    <span className="text-zinc-700">|</span>
+                    <span
+                      className={`font-semibold ${
+                        product.stock === 0
+                          ? "text-red-400"
+                          : "text-emerald-400"
+                      }`}
+                    >
+                      {product.stock === 0
+                        ? "Out of stock"
+                        : `${product.stock} left`}
+                    </span>
+                  </div>
                 </div>
 
                 {product.description && (
