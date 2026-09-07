@@ -81,6 +81,18 @@ function CartClient() {
     await refreshCount();
   };
 
+  const deleteSelected = async () => {
+    if (selectedIds.size === 0) return;
+    await fetch("/api/cart", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cartItemIds: Array.from(selectedIds) }),
+    });
+    setSelectedIds(new Set());
+    await fetchCart();
+    await refreshCount();
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center py-16">
@@ -120,9 +132,20 @@ function CartClient() {
             Select All ({items.length} {items.length === 1 ? "item" : "items"})
           </span>
         </label>
-        <span className="text-[11px] text-zinc-500">
-          {selectedIds.size} selected
-        </span>
+
+        <div className="flex items-center gap-3">
+          <span className="text-[11px] text-zinc-500">
+            {selectedIds.size} selected
+          </span>
+          {selectedIds.size > 0 && (
+            <button
+              onClick={deleteSelected}
+              className="rounded-sm border cursor-pointer border-red-900/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide text-red-400 transition-colors hover:border-red-500/50 hover:bg-red-500/5"
+            >
+              Delete
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -146,9 +169,7 @@ function CartClient() {
 
       <div className="mt-6 flex items-center justify-between border-t border-zinc-800 pt-4">
         <div className="flex justify-center items-center gap-1">
-          <span className="font-mono text-xs text-zinc-500">
-            Total:
-          </span>
+          <span className="font-mono text-xs text-zinc-500">Total:</span>
           <span className="font-mono text-base font-bold text-emerald-400">
             ${selectedTotal.toFixed(2)}
           </span>

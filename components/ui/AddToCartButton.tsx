@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Check, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCartCount } from "@/context/CartCountContext";
+import { FaCartShopping } from "react-icons/fa6";
+
 
 type AddToCartButtonProps = {
   productId: number;
@@ -62,7 +64,7 @@ function AddToCartButton({ productId, stock }: AddToCartButtonProps) {
     >
       {status === "loading" && <Loader2 size={13} className="animate-spin" />}
       {status === "added" && <Check size={13} className="text-emerald-400" />}
-      {status === "idle" && <ShoppingCart size={13} />}
+      {status === "idle" && <FaCartShopping size={13} />}
       {status === "added"
         ? "Added"
         : status === "error"

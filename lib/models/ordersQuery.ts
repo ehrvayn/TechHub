@@ -159,18 +159,19 @@ const OrdersQuery = {
     return {
       query: `
       WITH updated_order AS (
-          UPDATE orders
-          SET status = $1
-          WHERE id = $2
-          RETURNING *
-        )
-        SELECT 
-          uo.id AS order_id,
-          uo.status,
-          oi.product_id,
-          oi.quantity
-        FROM updated_order uo
-        JOIN order_items oi ON oi.order_id = uo.id;`,
+        UPDATE orders
+        SET status = $1
+        WHERE id = $2
+        RETURNING *
+      )
+      SELECT 
+        uo.id AS order_id,
+        uo.user_id,
+        uo.status,
+        oi.product_id,
+        oi.quantity
+      FROM updated_order uo
+      LEFT JOIN order_items oi ON oi.order_id = uo.id;`,
       values: [status, orderId],
     };
   },

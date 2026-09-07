@@ -2,7 +2,13 @@
 
 import { useEffect, useState, useRef } from "react";
 import LogoutModal from "@/components/modals/logoutModal";
-import { ShoppingBag, LayoutDashboard, ChevronDown } from "lucide-react";
+import SupportModal from "@/components/modals/supportModal";
+import {
+  ShoppingBag,
+  LayoutDashboard,
+  ChevronDown,
+  HelpCircle,
+} from "lucide-react";
 import Link from "next/link";
 
 type ProfileMenuProps = {
@@ -17,6 +23,7 @@ export default function ProfileMenu({
   role,
 }: ProfileMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +46,7 @@ export default function ProfileMenu({
     <div ref={menuRef} className="relative flex items-center gap-3">
       {session.user.picture ? (
         <button
+          type="button"
           className="cursor-pointer"
           onClick={() => setMenuOpen((prev) => !prev)}
         >
@@ -47,13 +55,13 @@ export default function ProfileMenu({
               src={session.user.picture}
               alt={session.user.name ?? "Account"}
               referrerPolicy="no-referrer"
-              className="h-7 w-7 rounded-full object-cover transition-colors border border-zinc-700"
+              className="h-7 w-7 rounded-full border border-zinc-700 object-cover transition-colors"
             />
             <p className="text-sm text-zinc-100">
               {session.user.name?.split(" ")[0] ?? "Account"}
             </p>
             {menuOpen ? (
-              <ChevronDown size={16} className="text-zinc-100 rotate-180" />
+              <ChevronDown size={16} className="rotate-180 text-zinc-100" />
             ) : (
               <ChevronDown size={16} className="text-zinc-100" />
             )}
@@ -61,6 +69,7 @@ export default function ProfileMenu({
         </button>
       ) : (
         <button
+          type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
           className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-emerald-400/10 font-mono text-xs font-semibold text-emerald-400 ring-1 ring-emerald-400/30"
         >
@@ -90,9 +99,26 @@ export default function ProfileMenu({
             <span>My purchases</span>
           </Link>
 
+          <button
+            type="button"
+            onClick={() => {
+              setSupportOpen(true);
+              setMenuOpen(false);
+            }}
+            className="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800"
+          >
+            <HelpCircle size={16} className="text-zinc-400" />
+            <span>Help / Support</span>
+          </button>
+
           <LogoutModal />
         </div>
       )}
+
+      <SupportModal
+        isOpen={supportOpen}
+        onClose={() => setSupportOpen(false)}
+      />
     </div>
   );
 }

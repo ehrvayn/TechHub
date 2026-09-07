@@ -1,4 +1,4 @@
-import { Search, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { auth0 } from "@/lib/auth/auth0";
 import { syncUser } from "@/lib/services/userService";
 import Link from "next/link";
@@ -6,6 +6,8 @@ import Logo from "../../public/img/Logo.png";
 import ProfileMenu from "../ui/ProfileMenu";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import CartIconWithBadge from "@/components/ui/CartIconWithBadge";
+import SearchBar from "@/components/ui/Searchbar";
+import NotificationMenu from "@/components/ui/NotificationMenu";
 
 type NavbarProps = {
   showBackButton?: boolean;
@@ -53,21 +55,14 @@ const Navbar = async ({
           </Link>
         </div>
 
-        <div className="relative mx-4 flex flex-1 max-w-md items-center">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search size={16} className="text-zinc-500" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full rounded-md border border-zinc-800 bg-zinc-900/80 py-2 pl-9 pr-4 font-mono text-xs text-zinc-100 placeholder:text-zinc-500 transition-all focus:border-zinc-700 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-emerald-400/50"
-          />
-        </div>
+        <SearchBar />
 
         <div className="flex shrink-0 items-center gap-5">
-          <div className="flex items-center gap-5">
-            <CartIconWithBadge activeCart={activeCart} />
-
+          <div className="flex gap-5">
+            <div className="flex items-center gap-5">
+              <CartIconWithBadge activeCart={activeCart} />
+              <NotificationMenu userId={currentUser?.id} />
+            </div>
             <div className="h-8 w-px bg-zinc-800" />
           </div>
 
@@ -80,7 +75,7 @@ const Navbar = async ({
           ) : (
             <a
               href="/auth/login"
-              className="rounded-sm bg-emerald-400 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300"
+              className="rounded-[2] bg-emerald-400 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300"
             >
               Sign In
             </a>

@@ -1,6 +1,8 @@
 import { query } from "@/lib/database/db";
 import OrdersQuery from "@/lib/models/ordersQuery";
 import CartQuery from "@/lib/models/cartQuery";
+import NotificationQuery from "@/lib/models/notificationQuery";
+import { notificationEmitter } from "@/lib/events/notificationEvents";
 
 type CheckoutInput = {
   userId: number;
@@ -64,6 +66,19 @@ export const checkout = async (input: CheckoutInput) => {
       );
       await query(delSql, delValues);
     }
+
+    const { query: notifSql, values: notifValues } = NotificationQuery.create(
+      input.userId,
+      "ORDER_STATUS",
+      "Order Placed",
+      `Your order #${order.id} has been placed successfully!`,
+      `/orders/${order.id}`,
+    );
+    await query(notifSql, notifValues);
+
+    notificationEmitter.emit("notification", {
+      userId: input.userId,
+    });
 
     return { success: true, message: "Order placed!", order };
   } catch (error) {

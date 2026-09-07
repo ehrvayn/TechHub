@@ -52,6 +52,12 @@ const CartQuery = {
     };
   },
 
+  deleteMany: (cartItemIds: number[], userId: number) => {
+    return {
+      query: `DELETE FROM cart_items WHERE id = ANY($1) AND user_id = $2 RETURNING *`,
+      values: [cartItemIds, userId],
+    };
+  },
   findById: (cartItemId: number) => {
     return {
       query: `SELECT * FROM cart_items WHERE id = $1`,

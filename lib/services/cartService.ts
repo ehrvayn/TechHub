@@ -107,3 +107,26 @@ export const removeCartItem = async (userId: number, cartItemId: number) => {
     return { success: false, message: "Something went wrong!" };
   }
 };
+
+export const removeCartItems = async (
+  userId: number,
+  cartItemIds: number[],
+) => {
+  try {
+    if (cartItemIds.length === 0) {
+      return { success: false, message: "No items selected." };
+    }
+
+    const { query: sql, values } = CartQuery.deleteMany(cartItemIds, userId);
+    const result = await query(sql, values);
+
+    return {
+      success: true,
+      message: "Items removed.",
+      deletedCount: result.rows.length,
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Something went wrong!" };
+  }
+};

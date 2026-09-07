@@ -1,5 +1,35 @@
 import { query } from "@/lib/database/db";
 import OrdersQuery from "@/lib/models/ordersQuery";
+import NotificationQuery from "@/lib/models/notificationQuery";
+import { notificationEmitter } from "@/lib/events/notificationEvents";
+
+const getNotificationMessage = (status: string, orderId: number): string => {
+  const s = status.toLowerCase().replace(/_/g, " ").trim();
+
+  if (s === "pending") {
+    return `Your order #${orderId} has been received and is pending confirmation.`;
+  }
+  if (s === "processing") {
+    return `Your order #${orderId} is currently being prepared.`;
+  }
+  if (s === "dispatched") {
+    return `Your order #${orderId} has been dispatched from our warehouse.`;
+  }
+  if (s === "transit" || s === "in transit") {
+    return `Your order #${orderId} is now in transit.`;
+  }
+  if (s === "out for delivery") {
+    return `Your order #${orderId} is out for delivery and will arrive soon!`;
+  }
+  if (s === "delivered") {
+    return `Your order #${orderId} has been successfully delivered.`;
+  }
+  if (s === "cancelled") {
+    return `Your order #${orderId} has been cancelled.`;
+  }
+
+  return `Your order #${orderId} status is now ${status}.`;
+};
 
 export const getOrderDetail = async (orderId: number, userId: number) => {
   try {
@@ -73,17 +103,38 @@ export const updateOrderStatus = async (orderId: number, status: string) => {
       return { success: false, message: "Order not found." };
     }
 
+    const updatedOrder = result.rows[0];
+
     if (status === "cancelled") {
       for (const item of result.rows) {
-        const { query: decSql, values: decValues } =
-          OrdersQuery.decrementTotalSold(item.product_id, item.quantity);
-        await query(decSql, decValues);
+        if (item.product_id && item.quantity) {
+          const { query: decSql, values: decValues } =
+            OrdersQuery.decrementTotalSold(item.product_id, item.quantity);
+          await query(decSql, decValues);
+        }
       }
     }
 
-    return { success: true, order: result.rows[0] };
+    if (updatedOrder?.user_id) {
+      const message = getNotificationMessage(status, orderId);
+
+      const { query: notifSql, values: notifValues } = NotificationQuery.create(
+        updatedOrder.user_id,
+        "ORDER_STATUS",
+        "Order Status Updated",
+        message,
+        `/orders/${orderId}`,
+      );
+      await query(notifSql, notifValues);
+
+      notificationEmitter.emit("notification", {
+        userId: updatedOrder.user_id,
+      });
+    }
+
+    return { success: true, order: updatedOrder };
   } catch (error) {
-    console.log(error);
+    console.error("updateOrderStatus error:", error);
     return { success: false, message: "Something went wrong!" };
   }
 };
@@ -104,7 +155,7 @@ export const getRevenueTrend = async () => {
     const { query: sql, values } = OrdersQuery.getRevenueByDay();
     const result = await query(sql, values);
     const trend = result.rows.map((row) => ({
-      day: new Date(row.day).toISOString().split("T")[0], // "2026-08-25"
+      day: new Date(row.day).toISOString().split("T")[0],
       revenue: row.revenue,
     }));
     return { success: true, trend };

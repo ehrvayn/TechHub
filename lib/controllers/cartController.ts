@@ -1,4 +1,10 @@
-import { addToCart, getCart, updateCartItem, removeCartItem } from "@/lib/services/cartService";
+import {
+  addToCart,
+  getCart,
+  updateCartItem,
+  removeCartItem,
+  removeCartItems,
+} from "@/lib/services/cartService";
 import { auth0 } from "@/lib/auth/auth0";
 import { NextResponse } from "next/server";
 import pool from "@/lib/database/db";
@@ -81,6 +87,21 @@ export async function handleDeleteCartItem(cartItemId: number) {
           ? 404
           : 500;
     return NextResponse.json({ message: result.message }, { status });
+  }
+  return NextResponse.json(result);
+}
+
+export async function handleDeleteCartItems(request: Request) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return NextResponse.json({ message: "Not logged in." }, { status: 401 });
+  }
+
+  const { cartItemIds } = await request.json();
+  const result = await removeCartItems(userId, cartItemIds); // plural function, array param
+
+  if (!result.success) {
+    return NextResponse.json(result, { status: 400 });
   }
   return NextResponse.json(result);
 }
