@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader2, PackageX, ChevronDown } from "lucide-react";
 import OrderCard from "./ui/orderCard";
 import OrderDetailModal from "@/components/modals/OrderDetailModal";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type OrderItem = {
   id: number;
@@ -24,6 +25,7 @@ type GroupedOrder = {
 };
 
 export default function MyPurchases() {
+  const { isDarkMode } = useDarkMode();
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -88,8 +90,16 @@ export default function MyPurchases() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 border-b border-zinc-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="font-mono text-xl font-bold tracking-tight text-zinc-50">
+      <div
+        className={`flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between ${
+          isDarkMode ? "border-zinc-800" : "border-zinc-200"
+        }`}
+      >
+        <h2
+          className={`font-mono text-xl font-bold tracking-tight ${
+            isDarkMode ? "text-zinc-50" : "text-zinc-900"
+          }`}
+        >
           My Purchases
         </h2>
 
@@ -97,7 +107,11 @@ export default function MyPurchases() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="appearance-none rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 pr-8 font-mono text-xs font-medium text-zinc-300 outline-none transition-colors hover:border-zinc-700 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 cursor-pointer"
+            className={`appearance-none rounded-lg border px-3 py-1.5 pr-8 font-mono text-xs font-medium outline-none transition-colors focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 cursor-pointer ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-900/80 text-zinc-300 hover:border-zinc-700"
+                : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300"
+            }`}
           >
             <option value="all">
               All Orders (
@@ -115,7 +129,11 @@ export default function MyPurchases() {
                 <option
                   key={status}
                   value={status}
-                  className="bg-zinc-900 text-zinc-300 capitalize"
+                  className={
+                    isDarkMode
+                      ? "bg-zinc-900 text-zinc-300 capitalize"
+                      : "bg-white text-zinc-700 capitalize"
+                  }
                 >
                   {status.charAt(0).toUpperCase() + status.slice(1)} ({count})
                 </option>
@@ -130,10 +148,20 @@ export default function MyPurchases() {
       </div>
 
       {filteredOrders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-800 py-16 text-center">
-          <PackageX className="mb-2 h-8 w-8 text-zinc-600" />
-          <p className="font-mono text-sm text-zinc-400">No orders found</p>
-          <p className="text-xs text-zinc-600">
+        <div
+          className={`flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center ${
+            isDarkMode ? "border-zinc-800" : "border-zinc-300"
+          }`}
+        >
+          <PackageX className="mb-2 h-8 w-8 text-zinc-500" />
+          <p
+            className={`font-mono text-sm ${
+              isDarkMode ? "text-zinc-400" : "text-zinc-600"
+            }`}
+          >
+            No orders found
+          </p>
+          <p className="text-xs text-zinc-500">
             {filterStatus === "all"
               ? "Your purchase history is empty."
               : `You have no orders with status "${filterStatus}".`}

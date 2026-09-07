@@ -6,6 +6,7 @@ import { X, Send, Loader2 } from "lucide-react";
 import Logo from "@/app/favicon.png";
 import { usePathname } from "next/navigation";
 import { RiMessage2Fill } from "react-icons/ri";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -39,6 +40,7 @@ function FormattedText({ content }: { content: string }) {
 }
 
 export default function ChatWidget() {
+  const { isDarkMode } = useDarkMode();
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
@@ -103,8 +105,20 @@ export default function ChatWidget() {
   return (
     <>
       {open && (
-        <div className="fixed bottom-20 right-4 z-50 flex h-115 w-80 sm:w-88 flex-col overflow-hidden rounded-[5px] border border-zinc-800 bg-zinc-950 shadow-2xl transition-all">
-          <div className="flex items-center justify-between border-b border-zinc-800/80 bg-zinc-900/60 px-3.5 py-3 backdrop-blur-md">
+        <div
+          className={`fixed bottom-20 right-4 z-50 flex h-115 w-80 sm:w-88 flex-col overflow-hidden rounded-[5px] border shadow-2xl transition-all ${
+            isDarkMode
+              ? "border-zinc-800 bg-zinc-950 text-zinc-300"
+              : "border-zinc-200 bg-white text-zinc-800"
+          }`}
+        >
+          <div
+            className={`flex items-center justify-between border-b px-3.5 py-3 backdrop-blur-md ${
+              isDarkMode
+                ? "border-zinc-800/80 bg-zinc-900/60"
+                : "border-zinc-200 bg-zinc-100/80"
+            }`}
+          >
             <div className="flex items-center gap-2">
               <Image
                 src={Logo}
@@ -113,13 +127,21 @@ export default function ChatWidget() {
                 height={18}
                 className="object-contain"
               />
-              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-200 flex items-center gap-1.5">
+              <span
+                className={`font-mono text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 ${
+                  isDarkMode ? "text-zinc-200" : "text-zinc-800"
+                }`}
+              >
                 TechHub Assistant
               </span>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="rounded p-1 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+              className={`rounded p-1 transition-colors ${
+                isDarkMode
+                  ? "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                  : "text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800"
+              }`}
             >
               <X size={15} />
             </button>
@@ -127,18 +149,22 @@ export default function ChatWidget() {
 
           <div
             ref={scrollRef}
-            className="flex-1 space-y-3 overflow-y-auto p-3.5 text-xs text-zinc-300"
+            className="flex-1 space-y-3 overflow-y-auto p-3.5 text-xs"
           >
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex ${
+                  m.role === "user" ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[88%] rounded-sm px-3 py-2 ${
                     m.role === "user"
-                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 font-mono"
-                      : "border border-zinc-800/80 bg-zinc-900/80 text-zinc-300"
+                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-mono"
+                      : isDarkMode
+                        ? "border border-zinc-800/80 bg-zinc-900/80 text-zinc-300"
+                        : "border border-zinc-200 bg-zinc-100 text-zinc-800"
                   }`}
                 >
                   <FormattedText content={m.content} />
@@ -148,7 +174,13 @@ export default function ChatWidget() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="flex items-center gap-2 rounded-sm border border-zinc-800/80 bg-zinc-900/80 px-3 py-2 text-zinc-400">
+                <div
+                  className={`flex items-center gap-2 rounded-sm border px-3 py-2 ${
+                    isDarkMode
+                      ? "border-zinc-800/80 bg-zinc-900/80 text-zinc-400"
+                      : "border-zinc-200 bg-zinc-100 text-zinc-600"
+                  }`}
+                >
                   <Loader2
                     size={13}
                     className="animate-spin text-emerald-400"
@@ -161,14 +193,30 @@ export default function ChatWidget() {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-2 w-full border-t border-zinc-800/80 bg-zinc-900/30 p-2.5">
-            <div className="flex-1 flex items-center gap-2 rounded-sm border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 transition-all focus-within:border-emerald-500/50">
+          <div
+            className={`flex items-center justify-center gap-2 w-full border-t p-2.5 ${
+              isDarkMode
+                ? "border-zinc-800/80 bg-zinc-900/30"
+                : "border-zinc-200 bg-zinc-50"
+            }`}
+          >
+            <div
+              className={`flex-1 flex items-center gap-2 rounded-sm border px-2.5 py-1.5 transition-all focus-within:border-emerald-500/50 ${
+                isDarkMode
+                  ? "border-zinc-800 bg-zinc-950"
+                  : "border-zinc-200 bg-white"
+              }`}
+            >
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Ask about stock, specs, or prices..."
-                className="flex-1 bg-transparent text-xs text-zinc-100 placeholder-zinc-500 outline-none"
+                className={`flex-1 bg-transparent text-xs outline-none ${
+                  isDarkMode
+                    ? "text-zinc-100 placeholder-zinc-500"
+                    : "text-zinc-900 placeholder-zinc-400"
+                }`}
               />
             </div>
             <button

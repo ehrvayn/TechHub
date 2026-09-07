@@ -34,13 +34,13 @@ const Navbar = async ({
     .toUpperCase();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950">
+    <nav className="sticky top-0 z-50 border-b border-zinc-300 bg-white dark:border-zinc-800 dark:bg-zinc-950">
       <div className="mx-auto flex w-full max-w-350 items-center justify-between gap-4 px-6 py-2.5 sm:px-8">
         <div className="flex shrink-0 items-center gap-3">
           {showBackButton && (
             <Link
               href="/"
-              className="text-zinc-400 transition-colors hover:text-zinc-100"
+              className="text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
             >
               <ArrowLeft size={25} />
             </Link>
@@ -63,7 +63,8 @@ const Navbar = async ({
               <CartIconWithBadge activeCart={activeCart} />
               <NotificationMenu userId={currentUser?.id} />
             </div>
-            <div className="h-8 w-px bg-zinc-800" />
+
+            <div className="h-8 w-px bg-zinc-300 dark:bg-zinc-800" />
           </div>
 
           {session ? (

@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import CartItemCard from "@/components/ui/cartItemCard";
 import { useRouter } from "next/navigation";
 import { useCartCount } from "@/context/CartCountContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type CartItem = {
   id: number;
@@ -17,6 +18,7 @@ type CartItem = {
 };
 
 function CartClient() {
+  const { isDarkMode } = useDarkMode();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
@@ -96,7 +98,7 @@ function CartClient() {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Loader2 size={20} className="animate-spin text-zinc-600" />
+        <Loader2 size={20} className="animate-spin text-zinc-500" />
       </div>
     );
   }
@@ -108,6 +110,7 @@ function CartClient() {
       </div>
     );
   }
+
   const goToCheckout = () => {
     if (selectedIds.size === 0) return;
     const itemsParam = Array.from(selectedIds).join(",");
@@ -120,7 +123,13 @@ function CartClient() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between rounded-sm border border-zinc-800/80 bg-zinc-950/60 px-4 py-3">
+      <div
+        className={`mb-4 flex items-center justify-between rounded-sm border px-4 py-3 ${
+          isDarkMode
+            ? "border-zinc-800/80 bg-zinc-950/60"
+            : "border-zinc-200 bg-zinc-50"
+        }`}
+      >
         <label className="flex items-center gap-2.5 cursor-pointer select-none">
           <input
             type="checkbox"
@@ -128,7 +137,11 @@ function CartClient() {
             onChange={toggleSelectAll}
             className="h-3.5 w-3.5 rounded-none accent-emerald-400 cursor-pointer"
           />
-          <span className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+          <span
+            className={`text-[11px] uppercase tracking-wider font-medium ${
+              isDarkMode ? "text-zinc-400" : "text-zinc-600"
+            }`}
+          >
             Select All ({items.length} {items.length === 1 ? "item" : "items"})
           </span>
         </label>
@@ -167,7 +180,11 @@ function CartClient() {
         ))}
       </div>
 
-      <div className="mt-6 flex items-center justify-between border-t border-zinc-800 pt-4">
+      <div
+        className={`mt-6 flex items-center justify-between border-t pt-4 ${
+          isDarkMode ? "border-zinc-800" : "border-zinc-200"
+        }`}
+      >
         <div className="flex justify-center items-center gap-1">
           <span className="font-mono text-xs text-zinc-500">Total:</span>
           <span className="font-mono text-base font-bold text-emerald-400">
@@ -177,7 +194,11 @@ function CartClient() {
         <button
           onClick={goToCheckout}
           disabled={selectedIds.size === 0}
-          className="rounded-sm bg-emerald-400 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-600"
+          className={`rounded-sm bg-emerald-400 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wide transition-colors hover:bg-emerald-300 disabled:cursor-not-allowed ${
+            isDarkMode
+              ? "text-zinc-950 disabled:bg-zinc-800 disabled:text-zinc-600"
+              : "text-zinc-950 disabled:bg-zinc-200 disabled:text-zinc-400"
+          }`}
         >
           Checkout
         </button>

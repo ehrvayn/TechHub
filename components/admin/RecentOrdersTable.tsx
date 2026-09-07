@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type DashboardOrder = {
   id: number;
@@ -24,6 +27,8 @@ export default function RecentOrdersTable({
 }: {
   orders: DashboardOrder[];
 }) {
+  const { isDarkMode } = useDarkMode();
+
   const money = (n: number) =>
     n.toLocaleString(undefined, {
       minimumFractionDigits: 2,
@@ -31,9 +36,23 @@ export default function RecentOrdersTable({
     });
 
   return (
-    <div className="overflow-hidden rounded-[4] border border-[#2A2F34] bg-[#15181B]">
-      <div className="flex items-center justify-between border-b border-[#2A2F34] px-4 py-3">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-[#6B7278]">
+    <div
+      className={`overflow-hidden rounded-[4] border ${
+        isDarkMode
+          ? "border-[#2A2F34] bg-[#15181B]"
+          : "border-zinc-200 bg-white"
+      }`}
+    >
+      <div
+        className={`flex items-center justify-between border-b px-4 py-3 ${
+          isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+        }`}
+      >
+        <h2
+          className={`font-mono text-[11px] uppercase tracking-widest ${
+            isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+          }`}
+        >
           Recent Orders
         </h2>
         <Link
@@ -46,38 +65,70 @@ export default function RecentOrdersTable({
       </div>
 
       {orders.length === 0 ? (
-        <div className="py-12 text-center text-sm text-[#6B7278]">
+        <div
+          className={`py-12 text-center text-sm ${
+            isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+          }`}
+        >
           No orders yet.
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-4 border-b border-[#2A2F34] bg-[#1B1F23] px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-[#6B7278]">
+          <div
+            className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
+              isDarkMode
+                ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278]"
+                : "border-zinc-200 bg-zinc-50 text-zinc-500"
+            }`}
+          >
             <span className="w-14">Order</span>
             <span className="flex-1">Customer</span>
             <span className="w-24">Payment</span>
             <span className="w-20 text-right">Amount</span>
             <span className="w-32 text-right">Status</span>
           </div>
-          <div className="divide-y divide-[#2A2F34]">
+          <div
+            className={`divide-y ${
+              isDarkMode ? "divide-[#2A2F34]" : "divide-zinc-200"
+            }`}
+          >
             {orders.map((order) => {
               const status = order.status?.toLowerCase() ?? "";
               return (
                 <div
                   key={order.id}
-                  className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[#1B1F23]"
+                  className={`flex items-center gap-4 px-4 py-3 transition-colors ${
+                    isDarkMode ? "hover:bg-[#1B1F23]" : "hover:bg-zinc-50"
+                  }`}
                 >
-                  <span className="w-14 font-mono text-xs tabular-nums text-[#6B7278]">
+                  <span
+                    className={`w-14 font-mono text-xs tabular-nums ${
+                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+                    }`}
+                  >
                     #{String(order.id).padStart(4, "0")}
                   </span>
-                  <span className="flex-1 truncate text-sm font-medium text-[#F2F0EB]">
+                  <span
+                    className={`flex-1 truncate text-sm font-medium ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     {order.shipping_name || "Guest customer"}
                   </span>
-                  <span className="w-24 font-mono text-xs uppercase text-[#6B7278]">
+                  <span
+                    className={`w-24 font-mono text-xs uppercase ${
+                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+                    }`}
+                  >
                     {order.payment_method === "cod"
                       ? "COD"
                       : order.payment_method || "—"}
                   </span>
-                  <span className="w-20 text-right font-mono text-sm font-semibold tabular-nums text-[#F2F0EB]">
+                  <span
+                    className={`w-20 text-right font-mono text-sm font-semibold tabular-nums ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     {order.total !== undefined
                       ? `$${money(Number(order.total))}`
                       : "—"}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search, Loader2, PackageX, ChevronDown } from "lucide-react";
 import AdminOrderCard from "./AdminOrdersCard";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type OrderItemRow = {
   item_id: number;
@@ -19,6 +20,7 @@ type OrderItemRow = {
 };
 
 export default function AdminOrdersFeed() {
+  const { isDarkMode } = useDarkMode();
   const [items, setItems] = useState<OrderItemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -147,14 +149,20 @@ export default function AdminOrdersFeed() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+            className={`absolute left-3 top-1/2 -translate-y-1/2 ${
+              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+            }`}
           />
           <input
             type="text"
             placeholder="Search product, customer, or order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-md border border-zinc-800 bg-zinc-900/80 py-2 pl-9 pr-4 font-mono text-xs text-zinc-100 placeholder:text-zinc-500 transition-all focus:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-emerald-400/50"
+            className={`w-full rounded-md border py-2 pl-9 pr-4 font-mono text-xs transition-all focus:outline-none focus:ring-1 focus:ring-emerald-400/50 ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-900/80 text-zinc-100 placeholder:text-zinc-500 focus:border-zinc-700"
+                : "border-zinc-300 bg-white text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400"
+            }`}
           />
         </div>
 
@@ -162,7 +170,11 @@ export default function AdminOrdersFeed() {
           <select
             value={selectedSort}
             onChange={(e) => setSelectedSort(e.target.value)}
-            className="appearance-none rounded-md border border-zinc-800 bg-zinc-900/80 px-3 py-2 pr-8 font-mono text-xs text-zinc-200 outline-none transition-colors hover:border-zinc-700 focus:border-emerald-400 cursor-pointer"
+            className={`appearance-none rounded-md border px-3 py-2 pr-8 font-mono text-xs outline-none transition-colors cursor-pointer ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-900/80 text-zinc-200 hover:border-zinc-700 focus:border-emerald-400"
+                : "border-zinc-300 bg-white text-zinc-800 hover:border-zinc-400 focus:border-emerald-500"
+            }`}
           >
             <option value="newest">Recent</option>
             <option value="pending">Pending</option>
@@ -176,13 +188,19 @@ export default function AdminOrdersFeed() {
           </select>
           <ChevronDown
             size={14}
-            className="absolute right-3 text-zinc-400 pointer-events-none"
+            className={`absolute right-3 pointer-events-none ${
+              isDarkMode ? "text-zinc-400" : "text-zinc-500"
+            }`}
           />
         </div>
       </div>
 
       {sortedOrderEntries.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-800 py-16 text-center">
+        <div
+          className={`flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center ${
+            isDarkMode ? "border-zinc-800" : "border-zinc-300"
+          }`}
+        >
           <PackageX className="mb-2 h-8 w-8 text-zinc-600" />
           <p className="font-mono text-xs text-zinc-500">
             No matching order items found

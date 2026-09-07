@@ -11,8 +11,9 @@ export default async function OrderPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-950">
+    <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar showBackButton />
+
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10 sm:px-8">
         <MyPurchases />
       </main>

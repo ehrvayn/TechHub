@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import StarRating from "@/components/ui/StarRating";
 import { Loader2 } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Review = {
   id: number;
@@ -16,6 +17,7 @@ type Review = {
 };
 
 export default function ReviewSection({ productId }: { productId: number }) {
+  const { isDarkMode } = useDarkMode();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [average, setAverage] = useState(0);
   const [count, setCount] = useState(0);
@@ -38,15 +40,27 @@ export default function ReviewSection({ productId }: { productId: number }) {
   if (loading) {
     return (
       <div className="mt-4 flex justify-center py-6">
-        <Loader2 size={16} className="animate-spin text-zinc-700" />
+        <Loader2 size={16} className="animate-spin text-zinc-500" />
       </div>
     );
   }
 
   return (
-    <div className="mt-4 rounded-sm border border-zinc-800 bg-zinc-950">
-      <div className="flex items-center gap-4 border-b border-zinc-800 px-3 py-3">
-        <span className="font-mono text-2xl font-bold text-zinc-50">
+    <div
+      className={`mt-4 rounded-sm border ${
+        isDarkMode ? "border-zinc-800 bg-zinc-950" : "border-zinc-200 bg-white"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-4 border-b px-3 py-3 ${
+          isDarkMode ? "border-zinc-800" : "border-zinc-200"
+        }`}
+      >
+        <span
+          className={`font-mono text-2xl font-bold ${
+            isDarkMode ? "text-zinc-50" : "text-zinc-900"
+          }`}
+        >
           {average.toFixed(1)}
         </span>
         <div className="flex flex-col gap-0.5">
@@ -58,11 +72,15 @@ export default function ReviewSection({ productId }: { productId: number }) {
       </div>
 
       {reviews.length === 0 ? (
-        <p className="px-3 py-4 font-mono text-xs text-zinc-600">
+        <p className="px-3 py-4 font-mono text-xs text-zinc-500">
           No reviews yet — be the first to leave one after your purchase.
         </p>
       ) : (
-        <div className="max-h-56 divide-y divide-zinc-800 overflow-y-auto">
+        <div
+          className={`max-h-56 divide-y overflow-y-auto ${
+            isDarkMode ? "divide-zinc-800" : "divide-zinc-200"
+          }`}
+        >
           {reviews.map((r) => {
             const initials =
               `${r.first_name?.[0] ?? ""}${r.last_name?.[0] ?? ""}`.toUpperCase();
@@ -74,7 +92,9 @@ export default function ReviewSection({ productId }: { productId: number }) {
                     src={r.avatar_url}
                     alt={`${r.first_name} ${r.last_name}`}
                     referrerPolicy="no-referrer"
-                    className="h-7 w-7 shrink-0 rounded-full border border-zinc-800 object-cover"
+                    className={`h-7 w-7 shrink-0 rounded-full border object-cover ${
+                      isDarkMode ? "border-zinc-800" : "border-zinc-200"
+                    }`}
                   />
                 ) : (
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400/10 font-mono text-[10px] font-semibold text-emerald-400 ring-1 ring-emerald-400/30">
@@ -85,7 +105,7 @@ export default function ReviewSection({ productId }: { productId: number }) {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <StarRating rating={r.rating} size={12} />
-                    <span className="font-mono text-[10px] text-zinc-600">
+                    <span className="font-mono text-[10px] text-zinc-500">
                       {new Date(r.created_at).toLocaleDateString(undefined, {
                         year: "numeric",
                         month: "short",
@@ -97,7 +117,11 @@ export default function ReviewSection({ productId }: { productId: number }) {
                     {r.first_name} {r.last_name}
                   </p>
                   {r.comment && (
-                    <p className="mt-1.5 font-sans text-xs leading-relaxed text-zinc-400">
+                    <p
+                      className={`mt-1.5 font-sans text-xs leading-relaxed ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                      }`}
+                    >
                       {r.comment}
                     </p>
                   )}

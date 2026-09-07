@@ -2,6 +2,7 @@
 
 import { X, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Product = {
   id: number;
@@ -30,6 +31,7 @@ export default function ProductDetailsModal({
   onClose,
   product,
 }: ProductDetailsModalProps) {
+  const { isDarkMode } = useDarkMode();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -71,15 +73,31 @@ export default function ProductDetailsModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-3xl rounded-lg border border-[#2A2F34] bg-zinc-900 p-6 shadow-xl font-mono text-xs text-zinc-300 max-h-[90vh] overflow-y-auto cursor-default"
+        className={`w-full max-w-3xl rounded-lg border p-6 shadow-xl font-mono text-xs max-h-[90vh] overflow-y-auto cursor-default ${
+          isDarkMode
+            ? "border-[#2A2F34] bg-zinc-900 text-zinc-300"
+            : "border-zinc-200 bg-white text-zinc-700"
+        }`}
       >
-        <div className="flex items-center justify-between border-b border-[#2A2F34] pb-4 mb-6">
-          <h2 className="text-sm font-bold text-[#F2F0EB] uppercase tracking-wider">
+        <div
+          className={`flex items-center justify-between border-b pb-4 mb-6 ${
+            isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+          }`}
+        >
+          <h2
+            className={`text-sm font-bold uppercase tracking-wider ${
+              isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+            }`}
+          >
             Product Details
           </h2>
           <button
             onClick={onClose}
-            className="text-[#6B7278] cursor-pointer transition-colors hover:text-[#F2F0EB]"
+            className={`cursor-pointer transition-colors ${
+              isDarkMode
+                ? "text-[#6B7278] hover:text-[#F2F0EB]"
+                : "text-zinc-400 hover:text-zinc-800"
+            }`}
           >
             <X size={16} />
           </button>
@@ -87,7 +105,13 @@ export default function ProductDetailsModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="flex flex-col">
-            <div className="relative w-full h-72 md:h-full min-h-70 overflow-hidden rounded-md border border-[#2A2F34] bg-zinc-950 flex items-center justify-center">
+            <div
+              className={`relative w-full h-72 md:h-full min-h-70 overflow-hidden rounded-md border flex items-center justify-center ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-zinc-950"
+                  : "border-zinc-200 bg-zinc-50"
+              }`}
+            >
               {imageUrls.length > 0 ? (
                 <>
                   <img
@@ -127,40 +151,70 @@ export default function ProductDetailsModal({
 
           <div className="space-y-4 flex flex-col justify-between">
             <div className="space-y-4">
-              <div className="rounded-md border border-[#2A2F34] bg-zinc-950 p-3 space-y-2.5">
+              <div
+                className={`rounded-md border p-3 space-y-2.5 ${
+                  isDarkMode
+                    ? "border-[#2A2F34] bg-zinc-950"
+                    : "border-zinc-200 bg-zinc-50"
+                }`}
+              >
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">ID:</span>
-                  <span className="text-[#F2F0EB] font-medium">
+                  <span
+                    className={`font-medium ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     {product.id}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">Name:</span>
-                  <span className="text-[#F2F0EB] font-medium text-right truncate max-w-45">
+                  <span
+                    className={`font-medium text-right truncate max-w-45 ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     {product.name}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">Slug:</span>
-                  <span className="text-zinc-400 text-right truncate max-w-45">
+                  <span
+                    className={`text-right truncate max-w-45 ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                    }`}
+                  >
                     {product.slug}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">Category:</span>
-                  <span className="text-zinc-400 uppercase text-right">
+                  <span
+                    className={`uppercase text-right ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                    }`}
+                  >
                     {product.category}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">Price:</span>
-                  <span className="text-[#F2F0EB] font-semibold text-right">
+                  <span
+                    className={`font-semibold text-right ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     ${Number(product.price).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#6B7278] uppercase">Total Sold:</span>
-                  <span className="text-[#F2F0EB] font-semibold text-right">
+                  <span
+                    className={`font-semibold text-right ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     {soldCount.toLocaleString()}
                   </span>
                 </div>
@@ -172,7 +226,9 @@ export default function ProductDetailsModal({
                         ? "text-[#C97066]"
                         : lowStock
                           ? "text-[#D1A053]"
-                          : "text-[#F2F0EB]"
+                          : isDarkMode
+                            ? "text-[#F2F0EB]"
+                            : "text-zinc-900"
                     }`}
                   >
                     {product.stock}{" "}
@@ -184,11 +240,19 @@ export default function ProductDetailsModal({
                   </span>
                 </div>
                 {product.description && (
-                  <div className="pt-2 border-t border-[#2A2F34]">
+                  <div
+                    className={`pt-2 border-t ${
+                      isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+                    }`}
+                  >
                     <span className="text-[#6B7278] uppercase block mb-1">
                       Description:
                     </span>
-                    <p className="text-zinc-300 text-xs leading-relaxed">
+                    <p
+                      className={`text-xs leading-relaxed ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}
+                    >
                       {product.description}
                     </p>
                   </div>
@@ -196,17 +260,31 @@ export default function ProductDetailsModal({
               </div>
 
               {product.specs && Object.keys(product.specs).length > 0 && (
-                <div className="rounded-md border border-[#2A2F34] bg-zinc-950 p-3 space-y-2">
+                <div
+                  className={`rounded-md border p-3 space-y-2 ${
+                    isDarkMode
+                      ? "border-[#2A2F34] bg-zinc-950"
+                      : "border-zinc-200 bg-zinc-50"
+                  }`}
+                >
                   <h3 className="text-[11px] font-bold uppercase text-[#6B7278] mb-1">
                     Specifications
                   </h3>
                   {Object.entries(product.specs).map(([key, value]) => (
                     <div
                       key={key}
-                      className="flex justify-between items-center border-b border-[#2A2F34]/50 pb-1.5 last:border-0 last:pb-0"
+                      className={`flex justify-between items-center border-b pb-1.5 last:border-0 last:pb-0 ${
+                        isDarkMode
+                          ? "border-[#2A2F34]/50"
+                          : "border-zinc-200/50"
+                      }`}
                     >
                       <span className="text-[#6B7278] uppercase">{key}:</span>
-                      <span className="text-zinc-200 text-right">
+                      <span
+                        className={`text-right ${
+                          isDarkMode ? "text-zinc-200" : "text-zinc-800"
+                        }`}
+                      >
                         {String(value)}
                       </span>
                     </div>
@@ -217,10 +295,18 @@ export default function ProductDetailsModal({
           </div>
         </div>
 
-        <div className="flex justify-end pt-4 border-t border-[#2A2F34]">
+        <div
+          className={`flex justify-end pt-4 border-t ${
+            isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+          }`}
+        >
           <button
             onClick={onClose}
-            className="rounded border border-[#2A2F34] bg-zinc-800 px-4 py-2 font-mono text-xs text-[#F2F0EB] hover:bg-zinc-700 transition-colors cursor-pointer"
+            className={`rounded border px-4 py-2 font-mono text-xs transition-colors cursor-pointer ${
+              isDarkMode
+                ? "border-[#2A2F34] bg-zinc-800 text-[#F2F0EB] hover:bg-zinc-700"
+                : "border-zinc-300 bg-zinc-100 text-zinc-900 hover:bg-zinc-200"
+            }`}
           >
             Close
           </button>

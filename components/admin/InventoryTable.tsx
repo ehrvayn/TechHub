@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import ProductFormModal from "./ProductFormModal";
 import ProductDetailsModal from "./ProductDetailModal";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Product = {
   id: number;
@@ -29,6 +30,7 @@ type Product = {
 type InventoryTableProps = {};
 
 export default function InventoryTable({}: InventoryTableProps) {
+  const { isDarkMode } = useDarkMode();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -95,10 +97,24 @@ export default function InventoryTable({}: InventoryTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-sm border border-[#2A2F34] bg-zinc-800/20">
-      <div className="flex flex-col gap-3 border-b border-[#2A2F34] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      className={`overflow-hidden rounded-sm border ${
+        isDarkMode
+          ? "border-[#2A2F34] bg-zinc-800/20"
+          : "border-zinc-200 bg-white"
+      }`}
+    >
+      <div
+        className={`flex flex-col gap-3 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${
+          isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+        }`}
+      >
         <div className="flex items-center gap-4">
-          <h2 className="font-mono text-[11px] uppercase tracking-widest text-[#6B7278]">
+          <h2
+            className={`font-mono text-[11px] uppercase tracking-widest ${
+              isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+            }`}
+          >
             Products ({filteredProducts.length})
           </h2>
 
@@ -106,7 +122,11 @@ export default function InventoryTable({}: InventoryTableProps) {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="rounded-sm border cursor-pointer border-[#2A2F34] bg-[#1B1F23] px-2.5 py-1 font-mono text-xs uppercase text-[#F2F0EB] focus:border-zinc-500 focus:outline-none"
+              className={`rounded-sm border cursor-pointer px-2.5 py-1 font-mono text-xs uppercase focus:outline-none ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-[#1B1F23] text-[#F2F0EB] focus:border-zinc-500"
+                  : "border-zinc-300 bg-zinc-50 text-zinc-800 focus:border-zinc-400"
+              }`}
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => (
@@ -120,7 +140,11 @@ export default function InventoryTable({}: InventoryTableProps) {
               onClick={() =>
                 setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
               }
-              className="flex items-center gap-1 cursor-pointer rounded-sm border border-[#2A2F34] bg-[#1B1F23] px-2.5 py-1 font-mono text-xs uppercase text-[#6B7278] transition-colors hover:border-zinc-600 hover:text-[#F2F0EB]"
+              className={`flex items-center gap-1 cursor-pointer rounded-sm border px-2.5 py-1 font-mono text-xs uppercase transition-colors ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278] hover:border-zinc-600 hover:text-[#F2F0EB]"
+                  : "border-zinc-300 bg-zinc-50 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900"
+              }`}
               title="Sort Alphabetically"
             >
               <ArrowUpDown size={12} />
@@ -131,12 +155,22 @@ export default function InventoryTable({}: InventoryTableProps) {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <div className="py-12 text-center font-mono text-xs text-[#6B7278]">
+        <div
+          className={`py-12 text-center font-mono text-xs ${
+            isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+          }`}
+        >
           No products found.
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-4 border-b border-[#2A2F34] bg-[#1B1F23] px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-[#6B7278]">
+          <div
+            className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
+              isDarkMode
+                ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278]"
+                : "border-zinc-200 bg-zinc-50 text-zinc-500"
+            }`}
+          >
             <span className="w-10" />
             <span className="flex-1">Name</span>
             <span className="w-28">Category</span>
@@ -145,7 +179,11 @@ export default function InventoryTable({}: InventoryTableProps) {
             <span className="w-16 text-right">Stock</span>
             <span className="w-24 text-right">Actions</span>
           </div>
-          <div className="divide-y divide-[#2A2F34]">
+          <div
+            className={`divide-y ${
+              isDarkMode ? "divide-[#2A2F34]" : "divide-zinc-200"
+            }`}
+          >
             {filteredProducts.map((p) => {
               const lowStock = p.stock <= 5 && p.stock > 0;
               const outOfStock = p.stock === 0;
@@ -155,9 +193,17 @@ export default function InventoryTable({}: InventoryTableProps) {
                 <div
                   key={p.id}
                   onClick={() => openDetailsModal(p)}
-                  className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[#1B1F23] cursor-pointer"
+                  className={`group flex items-center gap-4 px-4 py-3 transition-colors cursor-pointer ${
+                    isDarkMode ? "hover:bg-[#1B1F23]" : "hover:bg-zinc-50"
+                  }`}
                 >
-                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-sm border border-[#2A2F34] bg-zinc-950">
+                  <div
+                    className={`h-10 w-10 shrink-0 overflow-hidden rounded-sm border ${
+                      isDarkMode
+                        ? "border-[#2A2F34] bg-zinc-950"
+                        : "border-zinc-200 bg-zinc-100"
+                    }`}
+                  >
                     {p.image_url ? (
                       <img
                         src={p.image_url}
@@ -166,16 +212,34 @@ export default function InventoryTable({}: InventoryTableProps) {
                       />
                     ) : null}
                   </div>
-                  <span className="flex-1 truncate text-sm text-[#F2F0EB] group-hover:text-emerald-400 transition-colors">
+                  <span
+                    className={`flex-1 truncate text-sm transition-colors ${
+                      isDarkMode
+                        ? "text-[#F2F0EB] group-hover:text-emerald-400"
+                        : "text-zinc-900 group-hover:text-emerald-600"
+                    }`}
+                  >
                     {p.name}
                   </span>
-                  <span className="w-28 truncate font-mono text-xs uppercase text-[#6B7278]">
+                  <span
+                    className={`w-28 truncate font-mono text-xs uppercase ${
+                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+                    }`}
+                  >
                     {p.category}
                   </span>
-                  <span className="w-20 text-right font-mono text-sm tabular-nums text-[#F2F0EB]">
+                  <span
+                    className={`w-20 text-right font-mono text-sm tabular-nums ${
+                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                    }`}
+                  >
                     ${Number(p.price).toFixed(2)}
                   </span>
-                  <span className="w-16 text-right font-mono text-sm tabular-nums text-[#6B7278]">
+                  <span
+                    className={`w-16 text-right font-mono text-sm tabular-nums ${
+                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+                    }`}
+                  >
                     {soldCount.toLocaleString()}
                   </span>
                   <span
@@ -184,7 +248,9 @@ export default function InventoryTable({}: InventoryTableProps) {
                         ? "text-[#C97066]"
                         : lowStock
                           ? "text-[#D1A053]"
-                          : "text-[#F2F0EB]"
+                          : isDarkMode
+                            ? "text-[#F2F0EB]"
+                            : "text-zinc-900"
                     }`}
                   >
                     {p.stock}
@@ -195,21 +261,31 @@ export default function InventoryTable({}: InventoryTableProps) {
                   >
                     <button
                       onClick={() => openEditModal(p)}
-                      className="text-[#6B7278] transition-colors hover:text-[#F2F0EB]"
+                      className={`transition-colors ${
+                        isDarkMode
+                          ? "text-[#6B7278] hover:text-[#F2F0EB]"
+                          : "text-zinc-400 hover:text-zinc-900"
+                      }`}
                       title="Edit Product"
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => handleDelete(p.id)}
-                      className="text-[#6B7278] transition-colors hover:text-[#C97066]"
+                      className={`transition-colors ${
+                        isDarkMode
+                          ? "text-[#6B7278] hover:text-[#C97066]"
+                          : "text-zinc-400 hover:text-rose-600"
+                      }`}
                       title="Delete Product"
                     >
                       <Trash2 size={14} />
                     </button>
                     <ChevronRight
                       size={14}
-                      className="text-[#6B7278] opacity-0 group-hover:opacity-100 transition-opacity ml-1"
+                      className={`opacity-0 group-hover:opacity-100 transition-opacity ml-1 ${
+                        isDarkMode ? "text-[#6B7278]" : "text-zinc-400"
+                      }`}
                     />
                   </div>
                 </div>

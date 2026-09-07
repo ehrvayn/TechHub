@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useNotification } from "@/context/NotificationContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Notification = {
   id: number;
@@ -43,6 +44,7 @@ function formatRelativeTime(dateString: string): string {
 }
 
 export default function NotificationMenu({ userId }: { userId?: number }) {
+  const { isDarkMode } = useDarkMode();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(false);
@@ -131,40 +133,72 @@ export default function NotificationMenu({ userId }: { userId?: number }) {
       <button
         type="button"
         onClick={handleToggle}
-        className="relative mt-1 cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100"
+        className={`relative mt-1 cursor-pointer transition-colors ${
+          isDarkMode
+            ? "text-zinc-400 hover:text-zinc-100"
+            : "text-zinc-600 hover:text-zinc-900"
+        }`}
       >
         <FaBell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-zinc-950">
+          <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 mt-3 w-80 rounded-md border border-zinc-800 bg-zinc-900 font-mono shadow-xl">
-          <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-white">
+        <div
+          className={`absolute right-0 top-full z-50 mt-3 w-80 rounded-md border font-mono shadow-xl ${
+            isDarkMode
+              ? "border-zinc-800 bg-zinc-900"
+              : "border-zinc-200 bg-white"
+          }`}
+        >
+          <div
+            className={`flex items-center justify-between border-b px-4 py-2.5 ${
+              isDarkMode ? "border-zinc-800" : "border-zinc-200"
+            }`}
+          >
+            <span
+              className={`text-xs font-semibold uppercase tracking-wider ${
+                isDarkMode ? "text-white" : "text-zinc-900"
+              }`}
+            >
               Notifications
             </span>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={handleMarkAllAsRead}
-                className="text-[11px] text-emerald-400 hover:underline"
+                className={`text-[11px] hover:underline ${
+                  isDarkMode ? "text-emerald-400" : "text-emerald-600"
+                }`}
               >
                 Mark all read
               </button>
             )}
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-zinc-800/60 scrollbar-thin">
+          <div
+            className={`max-h-80 overflow-y-auto divide-y scrollbar-thin ${
+              isDarkMode ? "divide-zinc-800/60" : "divide-zinc-200"
+            }`}
+          >
             {loading ? (
-              <p className="p-4 text-center text-xs text-zinc-500">
+              <p
+                className={`p-4 text-center text-xs ${
+                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                }`}
+              >
                 Loading...
               </p>
             ) : notifications.length === 0 ? (
-              <p className="p-4 text-center text-xs text-zinc-500">
+              <p
+                className={`p-4 text-center text-xs ${
+                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                }`}
+              >
                 No notifications
               </p>
             ) : (
@@ -174,24 +208,44 @@ export default function NotificationMenu({ userId }: { userId?: number }) {
                   onClick={() => handleItemClick(item)}
                   className={`flex cursor-pointer flex-col gap-1 p-3 text-xs transition-colors ${
                     item.is_read
-                      ? "bg-transparent text-zinc-400 hover:bg-zinc-800/30"
-                      : "bg-emerald-500/5 text-zinc-200 hover:bg-emerald-500/10"
+                      ? isDarkMode
+                        ? "bg-transparent text-zinc-400 hover:bg-zinc-800/30"
+                        : "bg-transparent text-zinc-600 hover:bg-zinc-100"
+                      : isDarkMode
+                        ? "bg-emerald-500/5 text-zinc-200 hover:bg-emerald-500/10"
+                        : "bg-emerald-50 text-zinc-900 hover:bg-emerald-100"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate font-semibold text-white">
+                    <span
+                      className={`truncate font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-900"
+                      }`}
+                    >
                       {item.title}
                     </span>
                     <div className="flex shrink-0 items-center gap-1.5">
-                      <span className="text-[10px] text-zinc-500">
+                      <span
+                        className={`text-[10px] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
                         {formatRelativeTime(item.created_at)}
                       </span>
                       {!item.is_read && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            isDarkMode ? "bg-emerald-400" : "bg-emerald-600"
+                          }`}
+                        />
                       )}
                     </div>
                   </div>
-                  <p className="text-[11px] leading-relaxed text-zinc-400">
+                  <p
+                    className={`text-[11px] leading-relaxed ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                    }`}
+                  >
                     {item.message}
                   </p>
                 </div>

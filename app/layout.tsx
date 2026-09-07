@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartCountProvider } from "@/context/CartCountContext";
 import ChatWidget from "@/components/ChatWidget";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { DarkModeProvider } from "@/context/DarkModeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +32,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NotificationProvider>
-          <CartCountProvider>
-            {children}
-            <ChatWidget />
-          </CartCountProvider>
-        </NotificationProvider>
+        <DarkModeProvider>
+          <NotificationProvider>
+            <CartCountProvider>
+              {children}
+              <ChatWidget />
+            </CartCountProvider>
+          </NotificationProvider>
+        </DarkModeProvider>
       </body>
     </html>
   );

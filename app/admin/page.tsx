@@ -53,7 +53,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="flex flex-col space-y-10">
-      <h1 className="font-mono text-lg uppercase tracking-widest text-zinc-300">
+      <h1 className="font-mono text-lg uppercase tracking-widest text-zinc-900 dark:text-[#F2F0EB]">
         Store overview
       </h1>
 
