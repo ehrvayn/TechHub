@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useSyncExternalStore } from "react";
 import LogoutModal from "@/components/modals/logoutModal";
 import SupportModal from "@/components/modals/supportModal";
 import {
@@ -8,11 +8,42 @@ import {
   LayoutDashboard,
   ChevronDown,
   HelpCircle,
+  Moon,
+  Sun,
 } from "lucide-react";
 import Link from "next/link";
 
+type Theme = "light" | "dark";
+
+const themeListeners = new Set<() => void>();
+
+const getThemeSnapshot = (): Theme => {
+  if (typeof window === "undefined") {
+    return "dark";
+  }
+
+  return localStorage.getItem("theme") === "light" ? "light" : "dark";
+};
+
+const getServerThemeSnapshot = (): Theme => "dark";
+
+const subscribeToTheme = (listener: () => void) => {
+  themeListeners.add(listener);
+
+  return () => {
+    themeListeners.delete(listener);
+  };
+};
+
+type ProfileSession = {
+  user: {
+    picture?: string | null;
+    name?: string | null;
+  };
+};
+
 type ProfileMenuProps = {
-  session: any;
+  session: ProfileSession;
   initials: string;
   role?: string;
 };
@@ -24,7 +55,17 @@ export default function ProfileMenu({
 }: ProfileMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    getThemeSnapshot,
+    getServerThemeSnapshot,
+  );
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("light", theme === "light");
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -41,6 +82,14 @@ export default function ProfileMenu({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
+
+  const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", nextTheme);
+    themeListeners.forEach((listener) => listener());
+  };
 
   return (
     <div ref={menuRef} className="relative flex items-center gap-3">
@@ -109,6 +158,34 @@ export default function ProfileMenu({
           >
             <HelpCircle size={16} className="text-zinc-400" />
             <span>Help / Support</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-sm px-3 py-2 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-800"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            <span className="flex items-center gap-2">
+              {theme === "dark" ? (
+                <Moon size={16} className="text-zinc-400" />
+              ) : (
+                <Sun size={16} className="text-zinc-400" />
+              )}
+              <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
+            </span>
+            <span
+              aria-hidden="true"
+              className={`flex h-4 w-8 items-center rounded-full transition-colors ${
+                theme === "dark" ? "bg-emerald-500" : "bg-zinc-700"
+              }`}
+            >
+              <span
+                className={`h-3 w-3 rounded-full bg-white transition-transform ${
+                  theme === "dark" ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </span>
           </button>
 
           <LogoutModal />
