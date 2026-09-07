@@ -42,12 +42,15 @@ export default async function OrderDetailPage({
   const { order, items } = result;
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-950">
+    <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar showBackButton />
+
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10 sm:px-8">
         <div className="mb-8 flex flex-col items-center gap-2 text-center">
           <CheckCircle size={40} className="text-emerald-400" />
-          <h2 className="text-lg font-semibold text-zinc-100">Order Placed</h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            Order Placed
+          </h2>
           <p className="font-mono text-xs text-zinc-500">Order #{order.id}</p>
         </div>
 
@@ -55,42 +58,58 @@ export default async function OrderDetailPage({
           {items.map((item: any) => (
             <div
               key={item.id}
-              className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900 p-3"
+              className="flex items-center justify-between rounded-md border border-zinc-300 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900"
             >
               <div>
-                <p className="text-sm text-zinc-100">{item.product_name}</p>
+                <p className="text-sm text-zinc-900 dark:text-zinc-100">
+                  {item.product_name}
+                </p>
                 <p className="font-mono text-xs text-zinc-500">
                   ${Number(item.price).toFixed(2)} x {item.quantity}
                 </p>
               </div>
-              <span className="font-mono text-sm text-zinc-100">
+
+              <span className="font-mono text-sm text-zinc-900 dark:text-zinc-100">
                 ${(Number(item.price) * item.quantity).toFixed(2)}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="mb-6 flex items-center justify-between border-t border-zinc-800 pt-4">
-          <span className="font-mono text-sm text-zinc-400">Total</span>
-          <span className="font-mono text-lg font-semibold text-zinc-50">
+        <div className="mb-6 flex items-center justify-between border-t border-zinc-300 pt-4 dark:border-zinc-800">
+          <span className="font-mono text-sm text-zinc-600 dark:text-zinc-400">
+            Total
+          </span>
+          <span className="font-mono text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             ${Number(order.total).toFixed(2)}
           </span>
         </div>
 
-        <div className="mb-6 flex flex-col gap-2 rounded-md border border-zinc-800 bg-zinc-900 p-4">
+        <div className="mb-6 flex flex-col gap-2 rounded-md border border-zinc-300 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
           <h3 className="font-mono text-xs uppercase tracking-widest text-zinc-500">
             Shipping To
           </h3>
-          <p className="text-sm text-zinc-100">{order.shipping_name}</p>
-          <p className="text-sm text-zinc-400">{order.shipping_address}</p>
-          <p className="text-sm text-zinc-400">{order.shipping_city}</p>
-          <p className="text-sm text-zinc-400">{order.shipping_phone}</p>
+
+          <p className="text-sm text-zinc-900 dark:text-zinc-100">
+            {order.shipping_name}
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            {order.shipping_address}
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            {order.shipping_city}
+          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            {order.shipping_phone}
+          </p>
+
           <p className="mt-2 font-mono text-xs uppercase text-zinc-500">
             Payment:{" "}
             {order.payment_method === "cod"
               ? "Cash on Delivery"
               : order.payment_method}
           </p>
+
           <p className="font-mono text-xs uppercase text-zinc-500">
             Status: {order.status}
           </p>
@@ -98,7 +117,7 @@ export default async function OrderDetailPage({
 
         <Link
           href="/orders"
-          className="block w-full rounded-sm border border-zinc-700 py-2.5 text-center font-mono text-xs uppercase tracking-wide text-zinc-300 transition-colors hover:border-zinc-500 hover:text-zinc-100"
+          className="block w-full rounded-sm border border-zinc-400 py-2.5 text-center font-mono text-xs uppercase tracking-wide text-zinc-700 transition-colors hover:border-zinc-600 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100"
         >
           View All Orders
           <ArrowRight size={16} className="ml-2 inline-block" />

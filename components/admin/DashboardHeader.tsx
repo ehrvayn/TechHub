@@ -1,3 +1,7 @@
+"use client";
+
+import { useDarkMode } from "@/context/DarkModeContext";
+
 type DashboardHeaderProps = {
   revenue: number;
   orderCount: number;
@@ -13,6 +17,8 @@ export default function DashboardHeader({
   pendingCount,
   trend,
 }: DashboardHeaderProps) {
+  const { isDarkMode } = useDarkMode();
+
   const money = (n: number, decimals = 0) =>
     n.toLocaleString(undefined, {
       minimumFractionDigits: decimals,
@@ -24,13 +30,31 @@ export default function DashboardHeader({
   const needsReview = pendingCount > 0;
 
   return (
-    <div className="overflow-hidden rounded-[4] border border-[#2A2F34] bg-[#15181B]">
-      <div className="flex items-stretch divide-x divide-[#2A2F34]">
+    <div
+      className={`overflow-hidden rounded-[4] border ${
+        isDarkMode
+          ? "border-[#2A2F34] bg-[#15181B]"
+          : "border-zinc-200 bg-white"
+      }`}
+    >
+      <div
+        className={`flex items-stretch divide-x ${
+          isDarkMode ? "divide-[#2A2F34]" : "divide-zinc-200"
+        }`}
+      >
         <div className="flex-1 p-5">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-[#6B7278]">
+          <p
+            className={`font-mono text-[11px] uppercase tracking-widest ${
+              isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+            }`}
+          >
             Revenue <span className="text-sm">|</span> 14d
           </p>
-          <p className="mt-1 font-mono text-4xl font-bold tabular-nums text-[#F2F0EB]">
+          <p
+            className={`mt-1 font-mono text-4xl font-bold tabular-nums ${
+              isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+            }`}
+          >
             ${money(revenue, 2)}
           </p>
           <div className="mt-4 flex h-8 items-end gap-1">
@@ -43,7 +67,13 @@ export default function DashboardHeader({
               return (
                 <div
                   key={i}
-                  className={`flex-1 rounded-[1px] ${isLast ? "bg-[#C88A5A]" : "bg-[#2A2F34]"}`}
+                  className={`flex-1 rounded-[1px] ${
+                    isLast
+                      ? "bg-[#C88A5A]"
+                      : isDarkMode
+                        ? "bg-[#2A2F34]"
+                        : "bg-zinc-200"
+                  }`}
                   style={{ height: `${heightPct}%` }}
                 />
               );
@@ -55,33 +85,62 @@ export default function DashboardHeader({
           <div className="flex flex-col gap-1">
             <p
               className={`font-mono text-[10px] uppercase tracking-widest ${
-                needsReview ? "text-[#D1A053]" : "text-[#6B7278]"
+                needsReview
+                  ? "text-[#D1A053]"
+                  : isDarkMode
+                    ? "text-[#6B7278]"
+                    : "text-zinc-500"
               }`}
             >
               Unreviewed Orders
             </p>
             <p
               className={`font-mono text-xl font-semibold tabular-nums ${
-                needsReview ? "text-[#D1A053]" : "text-[#F2F0EB]"
+                needsReview
+                  ? "text-[#D1A053]"
+                  : isDarkMode
+                    ? "text-[#F2F0EB]"
+                    : "text-zinc-900"
               }`}
             >
               {pendingCount}
             </p>
           </div>
-          <div className="flex flex-col gap-1 border-t border-[#2A2F34] pt-4">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-[#6B7278]">
+          <div
+            className={`flex flex-col gap-1 border-t pt-4 ${
+              isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+            }`}
+          >
+            <p
+              className={`font-mono text-[10px] uppercase tracking-widest ${
+                isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+              }`}
+            >
               Avg. Value
             </p>
-            <p className="font-mono text-xl font-semibold tabular-nums text-[#F2F0EB]">
+            <p
+              className={`font-mono text-xl font-semibold tabular-nums ${
+                isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+              }`}
+            >
               ${money(avgOrderValue)}
             </p>
           </div>
         </div>
-        <div className={`flex w-36 flex-col justify-center gap-1 p-5 `}>
-          <p className="font-mono flex justify-center text-[13px] uppercase tracking-widest text-[#6B7278]">
+
+        <div className="flex w-36 flex-col justify-center gap-1 p-5">
+          <p
+            className={`font-mono flex justify-center text-[13px] uppercase tracking-widest ${
+              isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+            }`}
+          >
             Orders
           </p>
-          <p className="font-mono flex justify-center text-xl font-semibold tabular-nums text-[#F2F0EB]">
+          <p
+            className={`font-mono flex justify-center text-xl font-semibold tabular-nums ${
+              isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+            }`}
+          >
             {orderCount}
           </p>
         </div>

@@ -15,6 +15,7 @@ import {
   AdminProductProvider,
   useAdminProduct,
 } from "@/context/AdminProductContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Product = {
   id: number;
@@ -35,6 +36,7 @@ type ProductFormModalProps = {
 };
 
 function ProductFormContent() {
+  const { isDarkMode } = useDarkMode();
   const {
     isEditing,
     name,
@@ -105,14 +107,32 @@ function ProductFormContent() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs px-4">
-      <div className="w-full max-w-lg rounded border border-[#2A2F34] bg-[#16191D] p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="mb-4 flex items-center justify-between border-b border-[#2A2F34] pb-3">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-[#F2F0EB]">
+      <div
+        className={`w-full max-w-lg rounded border p-5 shadow-2xl max-h-[90vh] overflow-y-auto ${
+          isDarkMode
+            ? "border-[#2A2F34] bg-[#16191D]"
+            : "border-zinc-200 bg-white"
+        }`}
+      >
+        <div
+          className={`mb-4 flex items-center justify-between border-b pb-3 ${
+            isDarkMode ? "border-[#2A2F34]" : "border-zinc-200"
+          }`}
+        >
+          <h2
+            className={`font-mono text-xs uppercase tracking-widest ${
+              isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+            }`}
+          >
             {isEditing ? "Edit Product" : "Add Product"}
           </h2>
           <button
             onClick={onClose}
-            className="text-[#6B7278] cursor-pointer transition-colors hover:text-[#F2F0EB]"
+            className={`cursor-pointer transition-colors ${
+              isDarkMode
+                ? "text-[#6B7278] hover:text-[#F2F0EB]"
+                : "text-zinc-400 hover:text-zinc-800"
+            }`}
           >
             <X size={16} />
           </button>
@@ -151,7 +171,9 @@ function ProductFormContent() {
               className={`relative flex h-48 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-sm border border-dashed transition-colors ${
                 isDragging
                   ? "border-emerald-400 bg-emerald-400/5"
-                  : "border-[#2A2F34] bg-[#101215] hover:border-zinc-500"
+                  : isDarkMode
+                    ? "border-[#2A2F34] bg-[#101215] hover:border-zinc-500"
+                    : "border-zinc-300 bg-zinc-50 hover:border-zinc-400"
               }`}
             >
               <input
@@ -206,7 +228,11 @@ function ProductFormContent() {
                 <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
                   <Upload size={20} className="text-[#6B7278]" />
                   <div className="flex flex-col gap-0.5">
-                    <p className="font-mono text-xs uppercase tracking-wide text-[#F2F0EB]">
+                    <p
+                      className={`font-mono text-xs uppercase tracking-wide ${
+                        isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                      }`}
+                    >
                       {uploading ? "Uploading..." : "Drag & drop images here"}
                     </p>
                     <p className="font-mono text-[10px] text-[#6B7278]">
@@ -241,7 +267,11 @@ function ProductFormContent() {
               placeholder="ex. Mechanical Keyboard"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              className="rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-2 text-sm text-[#F2F0EB] outline-none transition-colors focus:border-zinc-500"
+              className={`rounded-sm border px-3 py-2 text-sm outline-none transition-colors ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                  : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+              }`}
             />
           </div>
 
@@ -259,7 +289,11 @@ function ProductFormContent() {
                   setIsDropdownOpen(true);
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
-                className="w-full rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-2 pr-8 text-sm text-[#F2F0EB] outline-none transition-colors focus:border-zinc-500"
+                className={`w-full rounded-sm border px-3 py-2 pr-8 text-sm outline-none transition-colors ${
+                  isDarkMode
+                    ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                    : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+                }`}
               />
               <ChevronDown
                 size={14}
@@ -268,7 +302,13 @@ function ProductFormContent() {
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-sm border border-[#2A2F34] bg-[#16191D] shadow-2xl">
+              <div
+                className={`absolute top-full left-0 z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-sm border shadow-2xl ${
+                  isDarkMode
+                    ? "border-[#2A2F34] bg-[#16191D]"
+                    : "border-zinc-200 bg-white"
+                }`}
+              >
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((c) => (
                     <div
@@ -277,7 +317,11 @@ function ProductFormContent() {
                         setCategoryId(c.id.toString());
                         setIsDropdownOpen(false);
                       }}
-                      className="cursor-pointer px-3 py-2 text-sm text-[#F2F0EB] transition-colors hover:bg-[#2A2F34]"
+                      className={`cursor-pointer px-3 py-2 text-sm transition-colors ${
+                        isDarkMode
+                          ? "text-[#F2F0EB] hover:bg-[#2A2F34]"
+                          : "text-zinc-900 hover:bg-zinc-100"
+                      }`}
                     >
                       {c.name}
                     </div>
@@ -302,7 +346,11 @@ function ProductFormContent() {
                 step="0.01"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-2 font-mono text-sm text-[#F2F0EB] outline-none transition-colors focus:border-zinc-500"
+                className={`rounded-sm border px-3 py-2 font-mono text-sm outline-none transition-colors ${
+                  isDarkMode
+                    ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                    : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+                }`}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -313,7 +361,11 @@ function ProductFormContent() {
                 placeholder="0"
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
-                className="rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-2 font-mono text-sm text-[#F2F0EB] outline-none transition-colors focus:border-zinc-500"
+                className={`rounded-sm border px-3 py-2 font-mono text-sm outline-none transition-colors ${
+                  isDarkMode
+                    ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                    : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+                }`}
               />
             </div>
           </div>
@@ -327,7 +379,11 @@ function ProductFormContent() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-2 text-sm text-[#F2F0EB] outline-none transition-colors focus:border-zinc-500"
+              className={`rounded-sm border px-3 py-2 text-sm outline-none transition-colors ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                  : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+              }`}
             />
           </div>
 
@@ -359,7 +415,11 @@ function ProductFormContent() {
                       onChange={(e) =>
                         updateSpecRow(index, "key", e.target.value)
                       }
-                      className="flex-1 rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-1.5 font-mono text-xs text-[#F2F0EB] outline-none focus:border-zinc-500"
+                      className={`flex-1 rounded-sm border px-3 py-1.5 font-mono text-xs outline-none ${
+                        isDarkMode
+                          ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                          : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+                      }`}
                     />
                     <input
                       placeholder="ex. 60hz"
@@ -367,7 +427,11 @@ function ProductFormContent() {
                       onChange={(e) =>
                         updateSpecRow(index, "value", e.target.value)
                       }
-                      className="flex-1 rounded-sm border border-[#2A2F34] bg-[#101215] px-3 py-1.5 text-xs text-[#F2F0EB] outline-none focus:border-zinc-500"
+                      className={`flex-1 rounded-sm border px-3 py-1.5 text-xs outline-none ${
+                        isDarkMode
+                          ? "border-[#2A2F34] bg-[#101215] text-[#F2F0EB] focus:border-zinc-500"
+                          : "border-zinc-300 bg-white text-zinc-900 focus:border-zinc-400"
+                      }`}
                     />
                     <button
                       type="button"

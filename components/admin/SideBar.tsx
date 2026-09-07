@@ -12,6 +12,7 @@ import {
   Settings,
   ArrowLeft,
 } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 const NAV_ITEMS = [
   {
@@ -44,19 +45,32 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { isDarkMode } = useDarkMode();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r border-solid border-zinc-700 bg-zinc-950 px-4 pt-2  select-none">
+    <aside
+      className={`sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r select-none px-4 pt-2 ${
+        isDarkMode ? "border-zinc-800 bg-zinc-950" : "border-zinc-200 bg-white"
+      }`}
+    >
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
           <Link
             href="/"
-            className="flex items-center gap-3 rounded-[2] py-2 font-mono text-xs text-zinc-400 transition-colors hover:bg-zinc-900/50 hover:text-zinc-200"
+            className={`flex items-center gap-3 rounded-[2] py-2 font-mono text-xs transition-colors ${
+              isDarkMode
+                ? "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+            }`}
           >
             <ArrowLeft size={15} className="text-zinc-500" />
             <span>Back to Store</span>
           </Link>
-          <div className="h-px flex bg-zinc-800 mx-[-17]" />
+          <div
+            className={`h-px flex mx-[-17] ${
+              isDarkMode ? "bg-zinc-800" : "bg-zinc-200"
+            }`}
+          />
         </div>
 
         <div className="px-2">
@@ -83,8 +97,12 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-[2] px-3 py-2 font-mono text-xs transition-colors ${
                   isActive
-                    ? "border border-zinc-800 bg-zinc-900 font-semibold text-zinc-100"
-                    : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                    ? isDarkMode
+                      ? "border border-zinc-800 bg-zinc-900 font-semibold text-zinc-100"
+                      : "border border-zinc-200 bg-zinc-100 font-semibold text-zinc-900"
+                    : isDarkMode
+                      ? "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200"
+                      : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
                 }`}
               >
                 <Icon
@@ -98,7 +116,13 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="mb-4 -mx-4 border-t border-zinc-800 bg-zinc-950 px-3 pt-3">
+      <div
+        className={`mb-4 -mx-4 border-t px-3 pt-3 ${
+          isDarkMode
+            ? "border-zinc-800 bg-zinc-950"
+            : "border-zinc-200 bg-white"
+        }`}
+      >
         <LogoutModal />
       </div>
     </aside>

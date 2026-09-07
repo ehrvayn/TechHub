@@ -6,6 +6,7 @@ import Fuse from "fuse.js";
 import ProductCard from "./ui/ProductCard";
 import { Loader2, X } from "lucide-react";
 import SubNav from "./layout/SubNav";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 export type Product = {
   id: number;
@@ -22,6 +23,7 @@ export type Product = {
 };
 
 export default function ProductFeed() {
+  const { isDarkMode } = useDarkMode();
   const searchParams = useSearchParams();
   const router = useRouter();
   const searchQuery = searchParams.get("search")?.trim() || "";
@@ -111,7 +113,13 @@ export default function ProductFeed() {
 
       <div className="flex-1 space-y-4">
         {searchQuery && (
-          <div className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 font-mono text-xs text-zinc-300">
+          <div
+            className={`flex items-center justify-between rounded-md border px-3.5 py-2 font-mono text-xs ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-900/60 text-zinc-300"
+                : "border-zinc-200 bg-zinc-50 text-zinc-700"
+            }`}
+          >
             <span>
               Results for:{" "}
               <strong className="text-emerald-400">"{searchQuery}"</strong>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Truck, ShieldCheck, RotateCcw, ArrowDown } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 import HBimg1 from "../public/img/HB_img1.png";
 import HBimg2 from "../public/img/HB_img2.png";
 import HBimg3 from "../public/img/HB_img3.png";
@@ -12,6 +13,7 @@ import HBimg5 from "../public/img/HB_img5.png";
 const images = [HBimg1, HBimg2, HBimg3, HBimg4, HBimg5];
 
 export function HeroBanner() {
+  const { isDarkMode } = useDarkMode();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -34,16 +36,30 @@ export function HeroBanner() {
 
   return (
     <div className="mb-8 w-full space-y-3">
-      <div className="relative overflow-hidden rounded-[5px] border border-zinc-800/80 bg-zinc-900/40 p-6 sm:p-10">
+      <div
+        className={`relative overflow-hidden rounded-[5px] border p-6 sm:p-10 ${
+          isDarkMode
+            ? "border-zinc-800/80 bg-zinc-900/40"
+            : "border-zinc-200 bg-zinc-50/80"
+        }`}
+      >
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
           <div className="space-y-4 text-center sm:text-left lg:col-span-6">
             <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-emerald-400">
               Featured Products
             </span>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-6xl">
+            <h1
+              className={`text-3xl font-extrabold tracking-tight sm:text-6xl ${
+                isDarkMode ? "text-white" : "text-zinc-900"
+              }`}
+            >
               Tech & Workstation Gear
             </h1>
-            <p className="max-w-md text-xs leading-relaxed text-zinc-400 sm:text-sm">
+            <p
+              className={`max-w-md text-xs leading-relaxed sm:text-sm ${
+                isDarkMode ? "text-zinc-400" : "text-zinc-600"
+              }`}
+            >
               High-performance hardware, accessories, and minimalist desktop
               setup essentials engineered for daily workflow.
             </p>
@@ -96,7 +112,9 @@ export function HeroBanner() {
                     className={`h-1.5 rounded-full transition-all duration-300 ${
                       index === currentIndex
                         ? "w-6 bg-emerald-400"
-                        : "w-2 bg-zinc-700 hover:bg-zinc-500"
+                        : isDarkMode
+                          ? "w-2 bg-zinc-700 hover:bg-zinc-500"
+                          : "w-2 bg-zinc-300 hover:bg-zinc-400"
                     }`}
                   />
                 ))}
@@ -106,22 +124,48 @@ export function HeroBanner() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 rounded-[5px] border border-zinc-800/80 bg-zinc-900/20 p-3.5 sm:grid-cols-3">
+      <div
+        className={`grid grid-cols-1 gap-2 rounded-[5px] border p-3.5 sm:grid-cols-3 ${
+          isDarkMode
+            ? "border-zinc-800/80 bg-zinc-900/20"
+            : "border-zinc-200 bg-zinc-50"
+        }`}
+      >
         <div className="flex items-center gap-3 px-3 py-1.5">
           <Truck size={16} className="text-emerald-400 shrink-0" />
-          <span className="font-mono text-xs text-zinc-300">
+          <span
+            className={`font-mono text-xs ${
+              isDarkMode ? "text-zinc-300" : "text-zinc-700"
+            }`}
+          >
             Fast Express Shipping
           </span>
         </div>
-        <div className="flex items-center gap-3 px-3 py-1.5 border-t sm:border-t-0 sm:border-l border-zinc-800/80">
+        <div
+          className={`flex items-center gap-3 px-3 py-1.5 border-t sm:border-t-0 sm:border-l ${
+            isDarkMode ? "border-zinc-800/80" : "border-zinc-200"
+          }`}
+        >
           <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
-          <span className="font-mono text-xs text-zinc-300">
+          <span
+            className={`font-mono text-xs ${
+              isDarkMode ? "text-zinc-300" : "text-zinc-700"
+            }`}
+          >
             Verified Authentic Items
           </span>
         </div>
-        <div className="flex items-center gap-3 px-3 py-1.5 border-t sm:border-t-0 sm:border-l border-zinc-800/80">
+        <div
+          className={`flex items-center gap-3 px-3 py-1.5 border-t sm:border-t-0 sm:border-l ${
+            isDarkMode ? "border-zinc-800/80" : "border-zinc-200"
+          }`}
+        >
           <RotateCcw size={16} className="text-emerald-400 shrink-0" />
-          <span className="font-mono text-xs text-zinc-300">
+          <span
+            className={`font-mono text-xs ${
+              isDarkMode ? "text-zinc-300" : "text-zinc-700"
+            }`}
+          >
             30-Day Returns
           </span>
         </div>

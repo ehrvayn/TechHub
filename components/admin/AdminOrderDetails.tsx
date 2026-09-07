@@ -1,6 +1,7 @@
 "use client";
 
 import { X, User, Phone, Home, CreditCard } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type OrderItemRow = {
   item_id: number;
@@ -36,16 +37,36 @@ export default function AdminOrderDetails({
   orderItems,
   orderTotal,
 }: AdminOrderDetailsProps) {
+  const { isDarkMode } = useDarkMode();
+
   if (!isOpen) return null;
 
   const firstItem = orderItems[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-lg rounded-lg border border-zinc-800 bg-zinc-900 p-6 shadow-xl font-mono text-xs text-zinc-300">
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 ${
+        isDarkMode ? "bg-black/70" : "bg-black/40"
+      }`}
+    >
+      <div
+        className={`w-full max-w-lg rounded-lg border p-6 shadow-xl font-mono text-xs ${
+          isDarkMode
+            ? "border-zinc-800 bg-zinc-900 text-zinc-300"
+            : "border-zinc-200 bg-white text-zinc-700"
+        }`}
+      >
+        <div
+          className={`flex items-center justify-between border-b pb-4 mb-4 ${
+            isDarkMode ? "border-zinc-800" : "border-zinc-200"
+          }`}
+        >
           <div>
-            <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wider">
+            <h2
+              className={`text-sm font-bold uppercase tracking-wider ${
+                isDarkMode ? "text-zinc-100" : "text-zinc-900"
+              }`}
+            >
               Order Details
             </h2>
             <p className="text-zinc-500 text-[11px]">
@@ -57,7 +78,11 @@ export default function AdminOrderDetails({
           <div className="flex justify-end">
             <button
               onClick={onClose}
-              className="rounded border cursor-pointer border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-100 hover:bg-zinc-700 transition-colors"
+              className={`rounded border cursor-pointer px-4 py-2 font-mono text-xs transition-colors ${
+                isDarkMode
+                  ? "border-zinc-700 bg-zinc-800 text-zinc-100 hover:bg-zinc-700"
+                  : "border-zinc-300 bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+              }`}
             >
               Close
             </button>
@@ -65,22 +90,46 @@ export default function AdminOrderDetails({
         </div>
 
         <div className="space-y-4 mb-6">
-          <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3 space-y-2">
-            <h3 className="text-[11px] pb-1 border-b border-zinc-800/60 font-bold uppercase text-zinc-400 mb-1">
+          <div
+            className={`rounded-md border p-3 space-y-2 ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-950"
+                : "border-zinc-200 bg-zinc-50"
+            }`}
+          >
+            <h3
+              className={`text-[11px] pb-1 border-b font-bold uppercase mb-1 ${
+                isDarkMode
+                  ? "border-zinc-800/60 text-zinc-400"
+                  : "border-zinc-200 text-zinc-600"
+              }`}
+            >
               Customer & Shipping Info
             </h3>
-            <div className="flex items-center gap-2 text-zinc-200">
+            <div
+              className={`flex items-center gap-2 ${
+                isDarkMode ? "text-zinc-200" : "text-zinc-800"
+              }`}
+            >
               <User size={13} className="text-zinc-500 shrink-0" />
               <span>{firstItem.shipping_name || "Guest Customer"}</span>
             </div>
             {firstItem.shipping_phone && (
-              <div className="flex items-center gap-2 text-zinc-300">
+              <div
+                className={`flex items-center gap-2 ${
+                  isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                }`}
+              >
                 <Phone size={13} className="text-zinc-500 shrink-0" />
                 <span>{firstItem.shipping_phone}</span>
               </div>
             )}
             {firstItem.shipping_address && (
-              <div className="flex items-start gap-2 text-zinc-300">
+              <div
+                className={`flex items-start gap-2 ${
+                  isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                }`}
+              >
                 <Home size={13} className="text-zinc-500 shrink-0 mt-0.5" />
                 <span>
                   {firstItem.shipping_address}
@@ -91,34 +140,66 @@ export default function AdminOrderDetails({
               </div>
             )}
             {firstItem.payment_method && (
-              <div className="flex items-center gap-2 text-zinc-300 pt-1 border-t border-zinc-800/60">
+              <div
+                className={`flex items-center gap-2 pt-1 border-t ${
+                  isDarkMode ? "border-zinc-800/60" : "border-zinc-200"
+                }`}
+              >
                 <CreditCard size={13} className="text-zinc-500 shrink-0" />
-                <span className="uppercase font-semibold text-zinc-200">
+                <span
+                  className={`uppercase font-semibold ${
+                    isDarkMode ? "text-zinc-200" : "text-zinc-800"
+                  }`}
+                >
                   Payment: {firstItem.payment_method}
                 </span>
               </div>
             )}
           </div>
 
-          <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3">
-            <h3 className="text-[11px] font-bold uppercase text-zinc-400 mb-2">
+          <div
+            className={`rounded-md border p-3 ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-950"
+                : "border-zinc-200 bg-zinc-50"
+            }`}
+          >
+            <h3
+              className={`text-[11px] font-bold uppercase mb-2 ${
+                isDarkMode ? "text-zinc-400" : "text-zinc-600"
+              }`}
+            >
               Ordered Items
             </h3>
             <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
               {orderItems.map((item) => (
                 <div
                   key={item.item_id}
-                  className="flex items-center justify-between border-b border-zinc-800/60 pb-2 last:border-0 last:pb-0"
+                  className={`flex items-center justify-between border-b pb-2 last:border-0 last:pb-0 ${
+                    isDarkMode ? "border-zinc-800/60" : "border-zinc-200"
+                  }`}
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <span className="text-emerald-400 font-bold">
+                    <span
+                      className={`font-bold ${
+                        isDarkMode ? "text-emerald-400" : "text-emerald-600"
+                      }`}
+                    >
                       {item.quantity}x
                     </span>
-                    <span className="truncate text-zinc-200">
+                    <span
+                      className={`truncate ${
+                        isDarkMode ? "text-zinc-200" : "text-zinc-800"
+                      }`}
+                    >
                       {item.product_name}
                     </span>
                   </div>
-                  <span className="text-zinc-400 shrink-0">
+                  <span
+                    className={`shrink-0 ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                    }`}
+                  >
                     ${Number(item.subtotal).toFixed(2)}
                   </span>
                 </div>
@@ -126,9 +207,19 @@ export default function AdminOrderDetails({
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-zinc-800 pt-3 text-zinc-200 font-bold">
+          <div
+            className={`flex items-center justify-between border-t pt-3 font-bold ${
+              isDarkMode
+                ? "border-zinc-800 text-zinc-200"
+                : "border-zinc-200 text-zinc-800"
+            }`}
+          >
             <span>Total Amount:</span>
-            <span className="text-emerald-400 text-sm">
+            <span
+              className={`text-sm ${
+                isDarkMode ? "text-emerald-400" : "text-emerald-600"
+              }`}
+            >
               ${orderTotal.toFixed(2)}
             </span>
           </div>

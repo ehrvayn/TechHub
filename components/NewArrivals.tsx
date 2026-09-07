@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useDarkMode } from "@/context/DarkModeContext";
 
 type Product = {
   id: number;
@@ -15,6 +16,7 @@ type Product = {
 };
 
 export default function NewArrivals() {
+  const { isDarkMode } = useDarkMode();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,12 +49,20 @@ export default function NewArrivals() {
       {products.map((product) => (
         <div
           key={product.id}
-          className="rounded border border-zinc-800 bg-zinc-900 p-4"
+          className={`rounded border p-4 ${
+            isDarkMode
+              ? "border-zinc-800 bg-zinc-900"
+              : "border-zinc-200 bg-white"
+          }`}
         >
           <p className="text-xs font-mono text-zinc-500 uppercase">
             {product.category}
           </p>
-          <h3 className="text-sm font-medium text-zinc-100 mt-2">
+          <h3
+            className={`text-sm font-medium mt-2 ${
+              isDarkMode ? "text-zinc-100" : "text-zinc-900"
+            }`}
+          >
             {product.name}
           </h3>
           <p className="text-emerald-400 font-mono text-sm mt-1">
