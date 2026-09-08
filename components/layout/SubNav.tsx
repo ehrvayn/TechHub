@@ -57,12 +57,12 @@ export default function SubNav({
 
   return (
     <div
-      className={`sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-5 overflow-y-auto pr-2 font-mono text-xs scrollbar-thin ${
+      className={`flex flex-col gap-4 font-mono text-xs lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-2 scrollbar-thin ${
         isDarkMode ? "text-zinc-400" : "text-zinc-600"
       }`}
     >
       <div
-        className={`flex flex-col gap-3 rounded-[5px] border p-2.5 ${
+        className={`flex flex-col gap-3 rounded-[5px] border p-2.5 sm:flex-row sm:items-center sm:gap-4 lg:flex-col lg:items-stretch ${
           isDarkMode
             ? "border-zinc-800 bg-zinc-900/40"
             : "border-zinc-200 bg-zinc-50/40"
@@ -150,7 +150,7 @@ export default function SubNav({
         <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
           Quick Links
         </span>
-        <div className="flex flex-col gap-0.5">
+        <div className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
           {QUICK_LINKS.map((link) => (
             <button
               key={link}
@@ -158,7 +158,7 @@ export default function SubNav({
               onClick={() => {
                 setActiveQuickLink(activeQuickLink === link ? null : link);
               }}
-              className={`cursor-pointer px-2.5 py-1.5 text-left ${
+              className={`cursor-pointer whitespace-nowrap px-2.5 py-1.5 text-left ${
                 activeQuickLink === link
                   ? isDarkMode
                     ? "border-b-2 border-emerald-500/50 bg-emerald-500/10 font-semibold text-emerald-400"
@@ -178,7 +178,7 @@ export default function SubNav({
         <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
           Categories
         </span>
-        <div className="flex flex-col gap-0.5">
+        <div className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.slug}
@@ -187,7 +187,7 @@ export default function SubNav({
                 setSelectedCategory(cat.slug);
                 setActiveQuickLink(null);
               }}
-              className={`cursor-pointer px-2.5 py-1.5 text-left ${
+              className={`cursor-pointer whitespace-nowrap px-2.5 py-1.5 text-left ${
                 !activeQuickLink && selectedCategory === cat.slug
                   ? isDarkMode
                     ? "border-b-2 border-emerald-500/50 bg-emerald-500/10 font-semibold text-emerald-400"

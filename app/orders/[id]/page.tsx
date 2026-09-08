@@ -45,7 +45,7 @@ export default async function OrderDetailPage({
     <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar showBackButton />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10 sm:px-8">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 sm:px-8 sm:py-10">
         <div className="mb-8 flex flex-col items-center gap-2 text-center">
           <CheckCircle size={40} className="text-emerald-400" />
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">

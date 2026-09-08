@@ -37,7 +37,7 @@ export function HeroBanner() {
   return (
     <div className="mb-8 w-full space-y-3">
       <div
-        className={`relative overflow-hidden rounded-[5px] border p-6 sm:p-10 ${
+        className={`relative overflow-hidden rounded-[5px] border p-4 sm:p-10 ${
           isDarkMode
             ? "border-zinc-800/80 bg-zinc-900/40"
             : "border-zinc-200 bg-zinc-50/80"
@@ -78,7 +78,7 @@ export function HeroBanner() {
           <div className="relative flex flex-col items-center justify-center lg:col-span-6">
             <div className="absolute h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
-            <div className="relative h-72 w-full sm:h-96 shrink-0">
+            <div className="relative h-56 w-full shrink-0 sm:h-96">
               {images.map((img, index) => (
                 <div
                   key={index}

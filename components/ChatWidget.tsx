@@ -106,7 +106,7 @@ export default function ChatWidget() {
     <>
       {open && (
         <div
-          className={`fixed bottom-20 right-4 z-50 flex h-115 w-80 sm:w-88 flex-col overflow-hidden rounded-[5px] border shadow-2xl transition-all ${
+          className={`fixed bottom-20 left-3 right-3 z-50 flex h-[calc(100vh-6rem)] max-h-[28rem] flex-col overflow-hidden rounded-[5px] border shadow-2xl transition-all sm:left-auto sm:right-4 sm:w-88 ${
             isDarkMode
               ? "border-zinc-800 bg-zinc-950 text-zinc-300"
               : "border-zinc-200 bg-white text-zinc-800"

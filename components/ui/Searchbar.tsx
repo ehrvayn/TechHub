@@ -32,7 +32,7 @@ export default function SearchBar() {
   return (
     <form
       onSubmit={handleSearch}
-      className="relative mx-4 flex flex-1 max-w-md items-center"
+      className="order-3 relative mx-0 flex basis-full items-center sm:order-none sm:mx-4 sm:max-w-md sm:flex-1 sm:basis-auto"
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
         <Search

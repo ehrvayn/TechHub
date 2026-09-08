@@ -60,14 +60,14 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
   return (
     <div
       onClick={onClick}
-      className={`group cursor-pointer rounded-[5] border p-5 transition-all ${
+      className={`group cursor-pointer rounded-[5] border p-4 transition-all sm:p-5 ${
         isDarkMode
           ? "border-zinc-800/80 bg-zinc-900/40 hover:border-zinc-700 hover:bg-zinc-900/80"
           : "border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50"
       }`}
     >
       <div
-        className={`flex items-center justify-between border-b pb-3 mb-4 ${
+        className={`flex flex-wrap items-center justify-between gap-2 border-b pb-3 mb-4 ${
           isDarkMode ? "border-zinc-800/60" : "border-zinc-200"
         }`}
       >
@@ -102,7 +102,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
           const safePrice = Number(item.price) || 0;
           const safeQuantity = Number(item.quantity) || 1;
           return (
-            <div key={item.id} className="flex items-center gap-4">
+            <div key={item.id} className="flex min-w-0 items-center gap-3 sm:gap-4">
               <div
                 className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-[5] border ${
                   isDarkMode
@@ -130,7 +130,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
                 )}
               </div>
 
-              <div className="flex flex-1 flex-col justify-center gap-0.5">
+              <div className="min-w-0 flex flex-1 flex-col justify-center gap-0.5">
                 <p
                   className={`text-sm font-medium transition-colors line-clamp-1 ${
                     isDarkMode
@@ -154,7 +154,7 @@ export default function OrderCard({ order, onClick }: OrderCardProps) {
       </div>
 
       <div
-        className={`mt-4 flex items-center justify-between border-t pt-3 ${
+        className={`mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-3 ${
           isDarkMode ? "border-zinc-800/60" : "border-zinc-200"
         }`}
       >

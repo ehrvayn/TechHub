@@ -149,7 +149,7 @@ export default function ReportsView() {
     useK ? `$${(val / 1000).toFixed(1)}k` : `$${Math.round(val)}`;
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
       <div className="col-span-2 px-5">
         <p className="text-[13px] font-mono text-zinc-500 dark:text-[#8B9198]">
           Total Revenue

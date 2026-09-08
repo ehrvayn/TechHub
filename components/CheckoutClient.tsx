@@ -122,7 +122,7 @@ function CheckoutClient() {
 
   return (
     <div
-      className={`mx-auto max-w-6xl py-8 font-mono text-xs px-6 ${
+      className={`mx-auto max-w-6xl py-6 font-mono text-xs sm:py-8 ${
         isDarkMode ? "text-zinc-300" : "text-zinc-700"
       }`}
     >
@@ -139,7 +139,7 @@ function CheckoutClient() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
         <div className="space-y-8 lg:col-span-7">
           <div className="space-y-4">
             <div

@@ -67,7 +67,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r select-none px-4 pt-2 ${
+      className={`sticky top-0 z-40 flex h-auto w-full shrink-0 flex-col justify-between border-b select-none px-4 pt-2 lg:h-screen lg:w-60 lg:border-b-0 lg:border-r ${
         isDarkMode ? "border-zinc-800 bg-zinc-950" : "border-zinc-200 bg-white"
       }`}
     >
@@ -99,9 +99,9 @@ export default function Sidebar() {
           />
         </div>
 
-        <nav className="space-y-4">
+        <nav className="flex gap-4 overflow-x-auto pb-2 lg:block lg:space-y-4 lg:overflow-visible lg:pb-0">
           {NAV_SECTIONS.map((section, idx) => (
-            <div key={idx} className="space-y-1">
+            <div key={idx} className="shrink-0 space-y-1 lg:shrink">
               <p className="px-2 pb-1.5 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
                 {section.title}
               </p>
@@ -140,12 +140,12 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="space-y-3">
+      <div className="flex items-center gap-3 py-2 lg:block lg:space-y-3 lg:py-0">
         <button
           onClick={() => {
             setIsDarkMode(!isDarkMode);
           }}
-          className={`flex w-full items-center justify-between rounded-xs px-3 py-2 font-mono text-xs transition-colors ${
+          className={`flex flex-1 items-center justify-between rounded-xs px-3 py-2 font-mono text-xs transition-colors lg:w-full ${
             isDarkMode ? "text-zinc-400" : "text-zinc-600 "
           }`}
         >
@@ -170,7 +170,7 @@ export default function Sidebar() {
           </div>
         </button>
         <div
-          className={`mb-4 -mx-4 space-y-3 border-t px-4 pt-3 ${
+          className={`mb-4 -mx-4 flex-1 space-y-3 border-t px-4 pt-3 lg:mb-4 ${
             isDarkMode
               ? "border-zinc-800 bg-zinc-950"
               : "border-zinc-200 bg-white"

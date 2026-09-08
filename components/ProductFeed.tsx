@@ -98,7 +98,7 @@ export default function ProductFeed() {
   };
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row">
+    <div id="products" className="flex flex-col gap-6 lg:flex-row lg:gap-8">
       <aside className="w-full shrink-0 lg:w-56">
         <SubNav
           selectedCategory={selectedCategory}
@@ -147,7 +147,7 @@ export default function ProductFeed() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-4 xl:grid-cols-3">
             {displayedProducts.map((product) => (
               <ProductCard
                 key={product.id}

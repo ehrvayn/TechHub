@@ -195,8 +195,8 @@ export default function DashboardHeader({
 
   return (
     <div className={`overflow-hidden rounded-[5] border ${border} ${surface}`}>
-      <div className={`flex items-stretch divide-x ${divide}`}>
-        <div className="flex-1 p-5">
+      <div className={`flex flex-col divide-y ${divide} lg:flex-row lg:items-stretch lg:divide-x lg:divide-y-0`}>
+        <div className="min-w-0 flex-1 p-4 sm:p-5">
           <div className="border-b pb-2 px-5 -mx-5 border-zinc-400/30">
             <div className="flex items-center justify-between">
               <p className={`text-sm ${textMuted}`}>Revenue last 7 days</p>
@@ -331,7 +331,7 @@ export default function DashboardHeader({
           )}
         </div>
 
-        <div className="flex w-40 flex-col justify-center gap-4 p-5">
+        <div className="flex w-full flex-row gap-6 p-4 sm:p-5 lg:w-40 lg:flex-col lg:justify-center lg:gap-4">
           <div>
             <p
               className={`text-xs ${needsReview ? "text-[#D1A053]" : textMuted}`}
@@ -356,7 +356,7 @@ export default function DashboardHeader({
           </div>
         </div>
 
-        <div className="flex w-28 flex-col justify-center gap-1 p-5 text-center">
+        <div className="flex w-full flex-row items-center justify-between gap-3 p-4 text-left sm:p-5 lg:w-28 lg:flex-col lg:justify-center lg:gap-1 lg:text-center">
           <p className={`text-xs ${textMuted}`}>Total orders</p>
           <p
             className={`font-mono text-xl font-semibold tabular-nums ${textPrimary}`}

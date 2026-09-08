@@ -73,7 +73,8 @@ export default function RecentOrdersTable({
           No orders yet.
         </div>
       ) : (
-        <>
+        <div className="overflow-x-auto">
+        <div className="min-w-[42rem]">
           <div
             className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
               isDarkMode
@@ -146,7 +147,8 @@ export default function RecentOrdersTable({
               );
             })}
           </div>
-        </>
+        </div>
+        </div>
       )}
     </div>
   );

@@ -35,7 +35,7 @@ function CartItemCard({
 
   return (
     <div
-      className={`flex items-center gap-4 rounded-md border p-3 ${
+      className={`flex flex-wrap items-center gap-3 rounded-md border p-3 sm:flex-nowrap sm:gap-4 ${
         isDarkMode ? "border-zinc-800 bg-zinc-900" : "border-zinc-200 bg-white"
       }`}
     >
@@ -66,7 +66,7 @@ function CartItemCard({
         )}
       </div>
 
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <p
           className={`text-sm ${isDarkMode ? "text-zinc-100" : "text-zinc-900"}`}
         >
@@ -79,7 +79,7 @@ function CartItemCard({
         </p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-2">
         <button
           onClick={() => onUpdateQuantity(id, quantity - 1)}
           disabled={updating}
@@ -112,7 +112,7 @@ function CartItemCard({
       </div>
 
       <span
-        className={`w-16 text-right font-mono text-sm ${
+        className={`w-full text-right font-mono text-sm sm:w-16 ${
           isDarkMode ? "text-zinc-100" : "text-zinc-900"
         }`}
       >

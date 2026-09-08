@@ -124,7 +124,7 @@ function CartClient() {
   return (
     <div>
       <div
-        className={`mb-4 flex items-center justify-between rounded-sm border px-4 py-3 ${
+        className={`mb-4 flex flex-wrap items-center justify-between gap-2 rounded-sm border px-3 py-3 sm:px-4 ${
           isDarkMode
             ? "border-zinc-800/80 bg-zinc-950/60"
             : "border-zinc-200 bg-zinc-50"
@@ -181,7 +181,7 @@ function CartClient() {
       </div>
 
       <div
-        className={`mt-6 flex items-center justify-between border-t pt-4 ${
+        className={`mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-4 ${
           isDarkMode ? "border-zinc-800" : "border-zinc-200"
         }`}
       >

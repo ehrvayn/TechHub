@@ -35,7 +35,7 @@ const Navbar = async ({
 
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-300 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="mx-auto flex w-full max-w-350 items-center justify-between gap-4 px-6 py-2.5 sm:px-8">
+      <div className="mx-auto flex w-full max-w-350 flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 sm:flex-nowrap sm:px-8">
         <div className="flex shrink-0 items-center gap-3">
           {showBackButton && (
             <Link
@@ -57,7 +57,7 @@ const Navbar = async ({
 
         <SearchBar />
 
-        <div className="flex shrink-0 items-center gap-5">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-5">
           <div className="flex gap-5">
             <div className="flex items-center gap-5">
               <CartIconWithBadge activeCart={activeCart} />
@@ -65,7 +65,7 @@ const Navbar = async ({
             </div>
           </div>
 
-          <div className="h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800" />
+          <div className="hidden h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800 sm:block" />
 
           {session ? (
             <ProfileMenu

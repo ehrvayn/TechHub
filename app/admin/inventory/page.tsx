@@ -15,7 +15,7 @@ export default function InventoryPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1
           className={`font-mono text-lg uppercase tracking-widest ${
             isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
@@ -25,7 +25,7 @@ export default function InventoryPage() {
         </h1>
         <button
           onClick={openAddModal}
-          className="group flex cursor-pointer px-4 py-3 items-center gap-2 overflow-hidden rounded-sm border border-emerald-400/40 bg-emerald-400/10 transition-colors hover:border-emerald-400 hover:bg-emerald-400/15"
+          className="group flex cursor-pointer items-center gap-2 rounded-sm border border-emerald-400/40 bg-emerald-400/10 px-3 py-2 transition-colors hover:border-emerald-400 hover:bg-emerald-400/15 sm:px-4 sm:py-3"
         >
           <span className="flex items-center text-emerald-400 transition-colors">
             <Plus size={15} />
