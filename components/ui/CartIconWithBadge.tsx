@@ -31,9 +31,7 @@ export default function CartIconWithBadge({
       />
       {count > 0 && (
         <span
-          className={`absolute -right-2 -top-3 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-400 px-1 font-mono text-[9px] font-bold ${
-            isDarkMode ? "text-zinc-950" : "text-white"
-          }`}
+          className={`absolute -right-1.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-400 px-1 text-[10px] font-bold text-white`}
         >
           {count > 99 ? "99+" : count}
         </span>

@@ -63,9 +63,9 @@ const Navbar = async ({
               <CartIconWithBadge activeCart={activeCart} />
               <NotificationMenu userId={currentUser?.id} />
             </div>
-
-            <div className="h-8 w-px bg-zinc-300 dark:bg-zinc-800" />
           </div>
+
+          <div className="h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800" />
 
           {session ? (
             <ProfileMenu

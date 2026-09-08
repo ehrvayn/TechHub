@@ -27,10 +27,19 @@ export async function handleSubmitReview(productId: number, request: Request) {
     return NextResponse.json({ message: "Not logged in." }, { status: 401 });
   }
 
-  const { rating, comment } = await request.json();
+  const { rating, comment, orderItemId } = await request.json();
+
+  if (!orderItemId) {
+    return NextResponse.json(
+      { message: "Order item ID is required." },
+      { status: 400 },
+    );
+  }
+
   const result = await submitReview(
     userId,
-    productId,
+    Number(orderItemId),
+    Number(productId), // <-- Add this here
     Number(rating),
     comment || null,
   );

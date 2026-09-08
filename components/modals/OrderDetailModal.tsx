@@ -331,6 +331,7 @@ export default function OrderDetailModal({
                         </div>
                         {isDelivered && (
                           <ItemReviewForm
+                            orderItemId={item.id}
                             productId={item.product_id}
                             is_reviewed={item.is_reviewed}
                           />

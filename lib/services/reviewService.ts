@@ -3,6 +3,7 @@ import ReviewsQuery from "@/lib/models/reviewsQuery";
 
 export const submitReview = async (
   userId: number,
+  orderItemId: number,
   productId: number,
   rating: number,
   comment: string | null,
@@ -13,28 +14,29 @@ export const submitReview = async (
     }
 
     const { query: purchaseSql, values: purchaseValues } =
-      ReviewsQuery.hasPurchased(userId, productId);
+      ReviewsQuery.hasPurchased(userId, orderItemId);
     const purchaseCheck = await query(purchaseSql, purchaseValues);
 
     if (purchaseCheck.rows.length === 0) {
       return {
         success: false,
-        message: "You can only review products you've purchased.",
+        message: "You can only review items from your own orders.",
       };
     }
 
     const { query: existingSql, values: existingValues } =
-      ReviewsQuery.getExistingReview(userId, productId);
+      ReviewsQuery.getExistingReview(orderItemId);
     const existing = await query(existingSql, existingValues);
 
     if (existing.rows.length > 0) {
       return {
         success: false,
-        message: "You've already reviewed this product.",
+        message: "You've already reviewed this specific purchase.",
       };
     }
 
     const { query: sql, values } = ReviewsQuery.createReview(
+      orderItemId,
       productId,
       userId,
       rating,

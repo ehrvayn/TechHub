@@ -5,6 +5,7 @@ import { Star, Check, Loader2 } from "lucide-react";
 import { useDarkMode } from "@/context/DarkModeContext";
 
 type ItemReviewFormProps = {
+  orderItemId: number;
   productId: number;
   is_reviewed: boolean;
 };
@@ -12,6 +13,7 @@ type ItemReviewFormProps = {
 export function ItemReviewForm({
   productId,
   is_reviewed,
+  orderItemId
 }: ItemReviewFormProps) {
   const { isDarkMode } = useDarkMode();
   const [open, setOpen] = useState(false);
@@ -32,7 +34,7 @@ export function ItemReviewForm({
     const res = await fetch(`/api/products/${productId}/reviews`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, comment }),
+      body: JSON.stringify({ rating, comment, orderItemId }),
     });
     const result = await res.json();
     setSubmitting(false);

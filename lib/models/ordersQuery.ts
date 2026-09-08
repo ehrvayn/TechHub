@@ -91,13 +91,11 @@ const OrdersQuery = {
         oi.quantity,
         (oi.price * oi.quantity) AS subtotal,
         pi.url AS image_url,
-        EXISTS (
-          SELECT 1 
-          FROM reviews r 
-          JOIN orders o ON o.id = oi.order_id
-          WHERE r.product_id = oi.product_id 
-            AND r.user_id = o.user_id
-        ) AS is_reviewed
+       EXISTS (
+        SELECT 1 
+        FROM reviews r 
+        WHERE r.order_item_id = oi.id
+      ) AS is_reviewed
       FROM order_items oi
       LEFT JOIN LATERAL (
         SELECT url 
