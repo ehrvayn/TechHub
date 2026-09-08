@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import ReviewSection from "../ReviewSection";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type ProductDetail = {
   id: number;
@@ -48,6 +49,7 @@ export default function ProductDetailModal({
   const router = useRouter();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  useBodyScrollLock(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -123,13 +125,13 @@ export default function ProductDetailModal({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-sm ${
+      className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm sm:px-4 ${
         isDarkMode ? "bg-black/60" : "bg-black/40"
       }`}
       onClick={onClose}
     >
       <div
-        className={`max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-md border font-mono text-xs ${
+        className={`h-full max-h-full w-full max-w-none overflow-y-auto border-0 font-mono text-xs sm:h-auto sm:max-h-[85vh] sm:max-w-3xl sm:rounded-md sm:border ${
           isDarkMode
             ? "border-zinc-800 bg-zinc-900 text-zinc-300"
             : "border-zinc-200 bg-white text-zinc-700"
@@ -174,8 +176,9 @@ export default function ProductDetailModal({
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-2">
-            <div>
+          <div className="p-4 sm:p-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+            <div className="sm:col-start-1 sm:row-start-1">
               <div
                 className={`relative aspect-square rounded-sm border overflow-hidden ${
                   isDarkMode
@@ -240,10 +243,9 @@ export default function ProductDetailModal({
                 )}
               </div>
 
-              <ReviewSection productId={product.id} />
             </div>
 
-            <div className="flex flex-col justify-between space-y-4">
+            <div className="flex flex-col justify-between space-y-4 sm:col-start-2 sm:row-start-1">
               <div className="space-y-2">
                 <h1
                   className={`text-base font-semibold ${
@@ -293,6 +295,7 @@ export default function ProductDetailModal({
                         : `${product.stock} left`}
                     </span>
                   </div>
+
                 </div>
 
                 {product.description && (
@@ -407,6 +410,7 @@ export default function ProductDetailModal({
                         +
                       </button>
                     </div>
+
                   </div>
                 )}
               </div>
@@ -441,6 +445,11 @@ export default function ProductDetailModal({
                   {buyingNow ? "..." : "Buy Now"}
                 </button>
               </div>
+            </div>
+
+            </div>
+            <div className="mt-5 sm:mt-6">
+              <ReviewSection productId={product.id} />
             </div>
           </div>
         )}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X, Loader2 } from "lucide-react";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type Customer = {
   first_name: string;
@@ -29,6 +30,7 @@ export default function CustomerDetailModal({
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  useBodyScrollLock(true);
 
   useEffect(() => {
     fetch(`/api/admin/customers/${customerId}`)
@@ -42,11 +44,11 @@ export default function CustomerDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 dark:bg-black/70"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 dark:bg-black/70 sm:px-4"
       onClick={onClose}
     >
       <div
-        className="max-h-[80vh] w-full max-w-md overflow-y-auto rounded-md border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+        className="h-full max-h-full w-full max-w-none overflow-y-auto border-0 bg-white dark:bg-zinc-900 sm:h-auto sm:max-h-[80vh] sm:max-w-md sm:rounded-md sm:border sm:border-zinc-200 dark:sm:border-zinc-800"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">

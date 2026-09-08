@@ -232,14 +232,17 @@ export default function ChatWidget() {
 
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="fixed bottom-4 cursor-pointer right-4 z-50 flex items-center gap-2 rounded-sm border border-emerald-500/40 bg-emerald-400 px-3.5 py-2 font-mono text-xs font-semibold text-zinc-950 shadow-lg transition-all hover:bg-emerald-300 active:scale-95"
+        aria-label={open ? "Close chat" : "Open chat"}
+        className="fixed bottom-20 right-4 z-50 flex h-11 w-11 cursor-pointer items-center justify-center gap-2 rounded-[5px] border border-emerald-500/40 bg-emerald-400 px-0 text-zinc-950 shadow-lg transition-all hover:bg-emerald-300 active:scale-95 sm:bottom-4 sm:w-auto sm:px-4"
       >
         {open ? (
           <X size={16} />
         ) : (
           <>
             <RiMessage2Fill size={23} className="animate-bounce" />
-            <span>Got any questions?</span>
+            <span className="hidden font-mono text-xs font-semibold sm:inline">
+              Got any questions?
+            </span>
           </>
         )}
       </button>

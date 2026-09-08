@@ -7,7 +7,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-8 sm:py-10">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-3 py-5 sm:px-8 sm:py-10">
         <HeroBanner />
         <ProductFeed />
       </main>

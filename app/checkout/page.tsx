@@ -6,7 +6,7 @@ export default function CheckoutPage() {
     <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar showBackButton />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-8 sm:py-10">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-3 py-5 sm:px-8 sm:py-10">
         <h1 className="font-mono text-lg uppercase tracking-widest text-zinc-900 dark:text-[#F2F0EB]">
           Checkout
         </h1>

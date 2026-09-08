@@ -16,6 +16,7 @@ import {
   useAdminProduct,
 } from "@/context/AdminProductContext";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type Product = {
   id: number;
@@ -37,6 +38,7 @@ type ProductFormModalProps = {
 
 function ProductFormContent() {
   const { isDarkMode } = useDarkMode();
+  useBodyScrollLock(true);
   const {
     isEditing,
     name,
@@ -106,9 +108,9 @@ function ProductFormContent() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs px-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-xs sm:px-4">
       <div
-        className={`w-full max-w-lg rounded border p-5 shadow-2xl max-h-[90vh] overflow-y-auto ${
+        className={`h-full max-h-full w-full max-w-none overflow-y-auto border-0 p-4 shadow-2xl sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded sm:border sm:p-5 ${
           isDarkMode
             ? "border-[#2A2F34] bg-[#16191D]"
             : "border-zinc-200 bg-white"

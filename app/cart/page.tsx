@@ -14,7 +14,7 @@ export default async function CartPage() {
     <div className="flex min-h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
       <Navbar showBackButton activeCart />
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-8 sm:py-10">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-3 py-5 sm:px-8 sm:py-10">
         <h1 className="mb-3 font-mono text-lg uppercase tracking-widest text-zinc-900 dark:text-[#F2F0EB]">
           Cart
         </h1>

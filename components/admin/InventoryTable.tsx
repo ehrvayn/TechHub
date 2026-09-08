@@ -165,7 +165,7 @@ export default function InventoryTable({}: InventoryTableProps) {
       ) : (
         <>
           <div
-            className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
+            className={`hidden items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest sm:flex ${
               isDarkMode
                 ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278]"
                 : "border-zinc-200 bg-zinc-50 text-zinc-500"
@@ -193,7 +193,7 @@ export default function InventoryTable({}: InventoryTableProps) {
                 <div
                   key={p.id}
                   onClick={() => openDetailsModal(p)}
-                  className={`group flex items-center gap-4 px-4 py-3 transition-colors cursor-pointer ${
+                  className={`group flex items-center gap-3 px-3 py-3 transition-colors cursor-pointer sm:gap-4 sm:px-4 ${
                     isDarkMode ? "hover:bg-[#1B1F23]" : "hover:bg-zinc-50"
                   }`}
                 >
@@ -213,37 +213,40 @@ export default function InventoryTable({}: InventoryTableProps) {
                     ) : null}
                   </div>
                   <span
-                    className={`flex-1 truncate text-sm transition-colors ${
+                    className={`min-w-0 flex-1 truncate text-sm transition-colors ${
                       isDarkMode
                         ? "text-[#F2F0EB] group-hover:text-emerald-400"
                         : "text-zinc-900 group-hover:text-emerald-600"
                     }`}
                   >
                     {p.name}
+                    <span className="mt-1 block truncate font-mono text-[10px] uppercase text-zinc-500 sm:hidden">
+                      {p.category} · ${Number(p.price).toFixed(2)} · {p.stock} in stock
+                    </span>
                   </span>
                   <span
-                    className={`w-28 truncate font-mono text-xs uppercase ${
+                    className={`hidden w-28 truncate font-mono text-xs uppercase sm:block ${
                       isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
                     }`}
                   >
                     {p.category}
                   </span>
                   <span
-                    className={`w-20 text-right font-mono text-sm tabular-nums ${
+                    className={`hidden w-20 text-right font-mono text-sm tabular-nums sm:block ${
                       isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
                     }`}
                   >
                     ${Number(p.price).toFixed(2)}
                   </span>
                   <span
-                    className={`w-16 text-right font-mono text-sm tabular-nums ${
+                    className={`hidden w-16 text-right font-mono text-sm tabular-nums sm:block ${
                       isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
                     }`}
                   >
                     {soldCount.toLocaleString()}
                   </span>
                   <span
-                    className={`w-16 text-right font-mono text-sm font-semibold tabular-nums ${
+                    className={`w-12 text-right font-mono text-sm font-semibold tabular-nums sm:w-16 ${
                       outOfStock
                         ? "text-[#C97066]"
                         : lowStock
@@ -256,7 +259,7 @@ export default function InventoryTable({}: InventoryTableProps) {
                     {p.stock}
                   </span>
                   <div
-                    className="flex w-24 items-center justify-end gap-2"
+                    className="flex w-16 items-center justify-end gap-2 sm:w-24"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button

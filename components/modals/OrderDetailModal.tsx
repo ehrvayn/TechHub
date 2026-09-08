@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { ItemReviewForm } from "../ui/ItemReviewForm";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 export type OrderDetail = {
   id: number;
@@ -67,6 +68,7 @@ export default function OrderDetailModal({
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
+  useBodyScrollLock(true);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -91,13 +93,13 @@ export default function OrderDetailModal({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md animate-in fade-in duration-200 ${
+      className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-md animate-in fade-in duration-200 sm:p-4 ${
         isDarkMode ? "bg-black/80" : "bg-black/60"
       }`}
       onClick={onClose}
     >
       <div
-        className={`relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[5px] border shadow-2xl ${
+        className={`relative h-full max-h-full w-full max-w-none overflow-y-auto border-0 shadow-2xl sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[5px] sm:border ${
           isDarkMode
             ? "border-zinc-800 bg-zinc-900"
             : "border-zinc-200 bg-white"

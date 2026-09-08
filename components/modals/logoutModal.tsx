@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LogOut, X } from "lucide-react";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type LogoutModalProps = {
   isOpen?: boolean;
@@ -19,6 +20,7 @@ export default function LogoutModal({
 
   const isOpen = externalIsOpen ?? internalIsOpen;
   const setIsOpen = externalSetIsOpen ?? setInternalIsOpen;
+  useBodyScrollLock(isOpen);
 
   return (
     <>
@@ -44,12 +46,12 @@ export default function LogoutModal({
 
       {isOpen && (
         <div
-          className={`fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-sm ${
+          className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm sm:px-4 ${
             isDarkMode ? "bg-black/60" : "bg-black/40"
           }`}
         >
           <div
-            className={`w-full max-w-sm rounded-md border p-5 shadow-2xl ${
+            className={`h-full max-h-full w-full max-w-none border-0 p-4 shadow-2xl sm:h-auto sm:max-w-sm sm:rounded-md sm:border sm:p-5 ${
               isDarkMode
                 ? "border-zinc-800 bg-zinc-900"
                 : "border-zinc-200 bg-white"

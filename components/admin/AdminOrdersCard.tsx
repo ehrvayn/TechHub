@@ -229,7 +229,7 @@ export default function AdminOrderCard({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full table-fixed text-left font-mono text-xs">
+          <table className="min-w-[34rem] w-full table-fixed text-left font-mono text-xs">
             <colgroup>
               <col className="w-[50%]" />
               <col className="w-[15%]" />

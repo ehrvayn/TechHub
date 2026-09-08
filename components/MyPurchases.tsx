@@ -103,7 +103,7 @@ export default function MyPurchases() {
           My Purchases
         </h2>
 
-        <div className="relative inline-block">
+        <div className="relative inline-block w-fit self-start sm:self-auto">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}

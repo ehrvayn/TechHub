@@ -2,6 +2,7 @@
 
 import { X, User, Phone, Home, CreditCard } from "lucide-react";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type OrderItemRow = {
   item_id: number;
@@ -38,6 +39,7 @@ export default function AdminOrderDetails({
   orderTotal,
 }: AdminOrderDetailsProps) {
   const { isDarkMode } = useDarkMode();
+  useBodyScrollLock(isOpen);
 
   if (!isOpen) return null;
 
@@ -45,12 +47,12 @@ export default function AdminOrderDetails({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 ${
+      className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm sm:p-4 ${
         isDarkMode ? "bg-black/70" : "bg-black/40"
       }`}
     >
       <div
-        className={`w-full max-w-lg rounded-lg border p-6 shadow-xl font-mono text-xs ${
+        className={`h-full max-h-full w-full max-w-none overflow-y-auto border-0 p-4 shadow-xl font-mono text-xs sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-lg sm:border sm:p-6 ${
           isDarkMode
             ? "border-zinc-800 bg-zinc-900 text-zinc-300"
             : "border-zinc-200 bg-white text-zinc-700"

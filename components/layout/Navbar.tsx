@@ -35,8 +35,9 @@ const Navbar = async ({
 
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-300 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="mx-auto flex w-full max-w-350 flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 sm:flex-nowrap sm:px-8">
-        <div className="flex shrink-0 items-center gap-3">
+      <div className="relative mx-auto flex w-full max-w-350 flex-col px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4 sm:px-8">
+        <div className="flex w-full items-center justify-between sm:w-auto">
+          <div className="flex shrink-0 items-center gap-3">
           {showBackButton && (
             <Link
               href="/"
@@ -53,34 +54,38 @@ const Navbar = async ({
               className="h-10 w-auto cursor-pointer"
             />
           </Link>
+          </div>
+
+          <div className="sm:absolute sm:inset-y-0 sm:right-8 sm:flex sm:items-center">
+            {session ? (
+              <ProfileMenu
+                session={session}
+                initials={initials || "U"}
+                role={currentUser?.role}
+              />
+            ) : (
+              <a
+                href="/auth/login"
+                className="rounded-[2px] bg-emerald-400 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-zinc-950"
+              >
+                Sign In
+              </a>
+            )}
+          </div>
         </div>
 
-        <SearchBar />
+        <div className="flex w-full items-center gap-3 pt-2 sm:contents sm:pt-0">
+          <SearchBar />
 
-        <div className="flex shrink-0 items-center gap-3 sm:gap-5">
-          <div className="flex gap-5">
-            <div className="flex items-center gap-5">
+          <div className="flex shrink-0 items-center gap-4 sm:gap-5 sm:pr-28">
+            <div className="flex items-center gap-4 sm:gap-5">
               <CartIconWithBadge activeCart={activeCart} />
               <NotificationMenu userId={currentUser?.id} />
             </div>
+
+            <div className="hidden h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800 sm:block" />
+
           </div>
-
-          <div className="hidden h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800 sm:block" />
-
-          {session ? (
-            <ProfileMenu
-              session={session}
-              initials={initials || "U"}
-              role={currentUser?.role}
-            />
-          ) : (
-            <a
-              href="/auth/login"
-              className="rounded-[2] bg-emerald-400 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300"
-            >
-              Sign In
-            </a>
-          )}
         </div>
       </div>
     </nav>

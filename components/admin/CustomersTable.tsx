@@ -42,7 +42,7 @@ export default function CustomersTable() {
 
   return (
     <div className="overflow-hidden rounded-sm border border-zinc-200 bg-white dark:border-[#2A2F34] dark:bg-[#15181B]">
-      <div className="flex items-center gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 dark:border-[#2A2F34] dark:bg-[#1B1F23] dark:text-[#6B7278]">
+      <div className="hidden items-center gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 sm:flex dark:border-[#2A2F34] dark:bg-[#1B1F23] dark:text-[#6B7278]">
         <span className="w-8" />
         <span className="flex-1">Name</span>
         <span className="w-48">Email</span>
@@ -54,7 +54,7 @@ export default function CustomersTable() {
           <div
             key={c.id}
             onClick={() => setSelectedId(c.id)}
-            className="flex cursor-pointer items-center gap-4 px-4 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-[#1B1F23]"
+            className="flex cursor-pointer items-center gap-3 px-3 py-3 transition-colors hover:bg-zinc-50 sm:gap-4 sm:px-4 dark:hover:bg-[#1B1F23]"
           >
             {c.avatar_url ? (
               <img
@@ -69,21 +69,27 @@ export default function CustomersTable() {
                 {c.last_name?.[0]}
               </div>
             )}
-            <span className="flex-1 truncate text-sm text-zinc-900 dark:text-zinc-100">
-              {c.first_name} {c.last_name}
-              {c.role === "admin" && (
-                <span className="ml-1.5 rounded-sm bg-zinc-200 px-1 py-0.5 font-mono text-[9px] uppercase text-zinc-600 dark:bg-zinc-800 dark:text-zinc-500">
-                  admin
-                </span>
-              )}
-            </span>
-            <span className="w-48 truncate font-mono text-xs text-zinc-500">
+            <div className="min-w-0 flex-1">
+              <span className="block truncate text-sm text-zinc-900 dark:text-zinc-100">
+                {c.first_name} {c.last_name}
+                {c.role === "admin" && (
+                  <span className="ml-1.5 rounded-sm bg-zinc-200 px-1 py-0.5 font-mono text-[9px] uppercase text-zinc-600 dark:bg-zinc-800 dark:text-zinc-500">
+                    admin
+                  </span>
+                )}
+              </span>
+              <span className="block truncate font-mono text-[10px] text-zinc-500 sm:hidden">
+                {c.email} · {c.order_count} orders · $
+                {Number(c.total_spent).toFixed(2)}
+              </span>
+            </div>
+            <span className="hidden w-48 truncate font-mono text-xs text-zinc-500 sm:block">
               {c.email}
             </span>
-            <span className="w-16 text-right font-mono text-sm text-zinc-900 dark:text-zinc-100">
+            <span className="hidden w-16 text-right font-mono text-sm text-zinc-900 sm:block dark:text-zinc-100">
               {c.order_count}
             </span>
-            <span className="w-24 text-right font-mono text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="hidden w-24 text-right font-mono text-sm font-semibold text-emerald-600 sm:block dark:text-emerald-400">
               ${Number(c.total_spent).toFixed(2)}
             </span>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { useDarkMode } from "@/context/DarkModeContext";
 
 type SubNavProps = {
@@ -175,10 +175,37 @@ export default function SubNav({
       </div>
 
       <div className="space-y-2 pb-4">
-        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+        <label
+          htmlFor="category-filter"
+          className="px-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 lg:block"
+        >
           Categories
-        </span>
-        <div className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
+        </label>
+        <div className="relative lg:hidden">
+          <select
+            id="category-filter"
+            value={selectedCategory}
+            onChange={(event) => {
+              setSelectedCategory(event.target.value);
+              setActiveQuickLink(null);
+            }}
+            className={`w-full appearance-none rounded-[5px] border px-3 py-2 pr-9 font-mono text-xs outline-none ${
+              isDarkMode
+                ? "border-zinc-800 bg-zinc-900 text-zinc-200"
+                : "border-zinc-200 bg-white text-zinc-700"
+            }`}
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat.slug} value={cat.slug}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500">
+            <ChevronDown size={14} strokeWidth={1.75} />
+          </span>
+        </div>
+        <div className="hidden gap-1 lg:flex lg:flex-col">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.slug}
@@ -187,7 +214,7 @@ export default function SubNav({
                 setSelectedCategory(cat.slug);
                 setActiveQuickLink(null);
               }}
-              className={`cursor-pointer whitespace-nowrap px-2.5 py-1.5 text-left ${
+              className={`cursor-pointer px-2.5 py-1.5 text-left ${
                 !activeQuickLink && selectedCategory === cat.slug
                   ? isDarkMode
                     ? "border-b-2 border-emerald-500/50 bg-emerald-500/10 font-semibold text-emerald-400"

@@ -3,6 +3,7 @@
 import { X, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDarkMode } from "@/context/DarkModeContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 type Product = {
   id: number;
@@ -34,6 +35,7 @@ export default function ProductDetailsModal({
   const { isDarkMode } = useDarkMode();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  useBodyScrollLock(isOpen);
 
   useEffect(() => {
     if (product) {
@@ -69,11 +71,11 @@ export default function ProductDetailsModal({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 cursor-pointer"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm sm:p-4 cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`w-full max-w-3xl rounded-lg border p-6 shadow-xl font-mono text-xs max-h-[90vh] overflow-y-auto cursor-default ${
+        className={`h-full max-h-full w-full max-w-none overflow-y-auto border-0 p-4 shadow-xl font-mono text-xs cursor-default sm:h-auto sm:max-h-[90vh] sm:max-w-3xl sm:rounded-lg sm:border sm:p-6 ${
           isDarkMode
             ? "border-[#2A2F34] bg-zinc-900 text-zinc-300"
             : "border-zinc-200 bg-white text-zinc-700"

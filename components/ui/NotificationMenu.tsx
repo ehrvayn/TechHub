@@ -129,7 +129,7 @@ export default function NotificationMenu({ userId }: { userId?: number }) {
   };
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative shrink-0" ref={menuRef}>
       <button
         type="button"
         onClick={handleToggle}
@@ -149,7 +149,7 @@ export default function NotificationMenu({ userId }: { userId?: number }) {
 
       {isOpen && (
         <div
-          className={`absolute right-0 top-full z-50 mt-3 w-80 rounded-md border font-mono shadow-xl ${
+          className={`fixed right-3 top-24 z-50 mt-3 w-[min(20rem,calc(100vw-1.5rem))] rounded-md border font-mono shadow-xl sm:absolute sm:right-0 sm:top-full sm:mt-3 sm:w-80 ${
             isDarkMode
               ? "border-zinc-800 bg-zinc-900"
               : "border-zinc-200 bg-white"

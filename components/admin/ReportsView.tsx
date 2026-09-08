@@ -150,7 +150,7 @@ export default function ReportsView() {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-      <div className="col-span-2 px-5">
+      <div className="col-span-1 px-1 sm:col-span-2 sm:px-5">
         <p className="text-[13px] font-mono text-zinc-500 dark:text-[#8B9198]">
           Total Revenue
         </p>
@@ -234,7 +234,7 @@ export default function ReportsView() {
         </div>
       </div>
 
-      <div className="col-span-2 rounded-lg border border-zinc-200 bg-white dark:border-[#2A2F34] dark:bg-[#15181B]">
+      <div className="col-span-1 rounded-lg border border-zinc-200 bg-white sm:col-span-2 dark:border-[#2A2F34] dark:bg-[#15181B]">
         <div className="p-5">
           <div className="flex border-b pb-2 px-5 -mx-5 border-zinc-400/30 flex-col">
             <p className="text-[13px] font-mono text-zinc-500 dark:text-[#8B9198]">
