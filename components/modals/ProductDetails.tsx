@@ -125,7 +125,7 @@ export default function ProductDetailModal({
 
   return (
     <div
-      className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm sm:px-4 ${
+      className={`fixed inset-0 z-60 flex items-center justify-center backdrop-blur-sm sm:px-4 ${
         isDarkMode ? "bg-black/60" : "bg-black/40"
       }`}
       onClick={onClose}

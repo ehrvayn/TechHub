@@ -188,7 +188,7 @@ export default function AdminOrdersFeed() {
           </select>
           <ChevronDown
             size={14}
-            className={`absolute right-3 pointer-events-none ${
+            className={`absolute sm:right-3 left-30 pointer-events-none ${
               isDarkMode ? "text-zinc-400" : "text-zinc-500"
             }`}
           />

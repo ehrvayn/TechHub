@@ -47,7 +47,7 @@ export default function AdminOrderDetails({
 
   return (
     <div
-      className={`fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm sm:p-4 ${
+      className={`fixed inset-0 z-60 flex items-center justify-center backdrop-blur-sm sm:p-4 ${
         isDarkMode ? "bg-black/70" : "bg-black/40"
       }`}
     >
