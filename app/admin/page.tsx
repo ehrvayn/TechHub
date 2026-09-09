@@ -53,6 +53,12 @@ export default async function AdminDashboard() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
+  const now = new Date();
+  const phNow = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Manila" }),
+  );
+  const todayKey = phNow.toISOString().slice(0, 10);
+
   return (
     <div className="flex flex-col space-y-10">
       <h1 className="font-mono text-lg uppercase tracking-widest text-zinc-900 dark:text-[#F2F0EB]">
@@ -65,6 +71,7 @@ export default async function AdminDashboard() {
         avgOrderValue={avgOrderValue}
         pendingCount={stats.pending_count}
         trend={trend}
+        todayKey={todayKey}
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">

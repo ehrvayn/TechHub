@@ -9,6 +9,7 @@ type DashboardHeaderProps = {
   avgOrderValue: number;
   pendingCount: number;
   trend: { day: string; revenue: number | string }[];
+  todayKey: string;
 };
 
 type Pt = { x: number; y: number };
@@ -68,6 +69,7 @@ export default function DashboardHeader({
   avgOrderValue,
   pendingCount,
   trend,
+  todayKey,
 }: DashboardHeaderProps) {
   const { isDarkMode } = useDarkMode();
 
@@ -105,11 +107,12 @@ export default function DashboardHeader({
 
   const toDateKey = (d: Date) => d.toISOString().slice(0, 10);
 
-  const buildWeek = (endDate: Date, byDate: Map<string, number>) => {
+  const buildWeek = (endDateKey: string, byDate: Map<string, number>) => {
     const days: { day: string; date: Date; revenue: number }[] = [];
+    const endDate = new Date(`${endDateKey}T00:00:00Z`);
     for (let i = 6; i >= 0; i--) {
       const d = new Date(endDate);
-      d.setDate(d.getDate() - i);
+      d.setUTCDate(d.getUTCDate() - i);
       const key = toDateKey(d);
       days.push({ day: key, date: d, revenue: byDate.get(key) ?? 0 });
     }
@@ -127,13 +130,12 @@ export default function DashboardHeader({
       .filter((x): x is readonly [string, number] => x !== null),
   );
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const lastWeekEnd = new Date(today);
-  lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
+  const lastWeekEnd = new Date(`${todayKey}T00:00:00Z`);
+  lastWeekEnd.setUTCDate(lastWeekEnd.getUTCDate() - 7);
+  const lastWeekEndKey = toDateKey(lastWeekEnd);
 
-  const thisWeek = buildWeek(today, trendMap);
-  const lastWeek = buildWeek(lastWeekEnd, trendMap);
+  const thisWeek = buildWeek(todayKey, trendMap);
+  const lastWeek = buildWeek(lastWeekEndKey, trendMap);
 
   const hasAnyTrendData = trendMap.size > 0;
   const lastWeekHasData = lastWeek.some((d) => d.revenue > 0);
@@ -195,7 +197,9 @@ export default function DashboardHeader({
 
   return (
     <div className={`overflow-hidden rounded-[5] border ${border} ${surface}`}>
-      <div className={`flex flex-col divide-y ${divide} lg:flex-row lg:items-stretch lg:divide-x lg:divide-y-0`}>
+      <div
+        className={`flex flex-col divide-y ${divide} lg:flex-row lg:items-stretch lg:divide-x lg:divide-y-0`}
+      >
         <div className="min-w-0 flex-1 p-4 sm:p-5">
           <div className="border-b pb-2 px-5 -mx-5 border-zinc-400/30">
             <div className="flex items-center justify-between">
@@ -317,7 +321,10 @@ export default function DashboardHeader({
               >
                 {thisWeek.map((d, i) => (
                   <span key={i}>
-                    {d.date.toLocaleDateString(undefined, { weekday: "short" })}
+                    {d.date.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      timeZone: "UTC",
+                    })}
                   </span>
                 ))}
               </div>
