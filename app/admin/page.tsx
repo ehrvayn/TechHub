@@ -7,6 +7,8 @@ import {
   getRevenueTrend,
 } from "@/lib/services/orderService";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const statsResult = await getAdminStats();
   const ordersResult = await listAllOrders();
