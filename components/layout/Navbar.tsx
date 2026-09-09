@@ -66,7 +66,7 @@ const Navbar = async ({
             ) : (
               <a
                 href="/auth/login"
-                className="rounded-[2px] bg-emerald-400 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-zinc-950"
+                className="rounded-xs bg-emerald-400 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-zinc-950"
               >
                 Sign In
               </a>
