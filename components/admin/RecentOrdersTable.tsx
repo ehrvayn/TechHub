@@ -74,80 +74,80 @@ export default function RecentOrdersTable({
         </div>
       ) : (
         <div className="overflow-x-auto">
-        <div className="min-w-[42rem]">
-          <div
-            className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
-              isDarkMode
-                ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278]"
-                : "border-zinc-200 bg-zinc-50 text-zinc-500"
-            }`}
-          >
-            <span className="w-14">Order</span>
-            <span className="flex-1">Customer</span>
-            <span className="w-24">Payment</span>
-            <span className="w-20 text-right">Amount</span>
-            <span className="w-32 text-right">Status</span>
-          </div>
-          <div
-            className={`divide-y ${
-              isDarkMode ? "divide-[#2A2F34]" : "divide-zinc-200"
-            }`}
-          >
-            {orders.map((order) => {
-              const status = order.status?.toLowerCase() ?? "";
-              return (
-                <div
-                  key={order.id}
-                  className={`flex items-center gap-4 px-4 py-3 transition-colors ${
-                    isDarkMode ? "hover:bg-[#1B1F23]" : "hover:bg-zinc-50"
-                  }`}
-                >
-                  <span
-                    className={`w-14 font-mono text-xs tabular-nums ${
-                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+          <div className="min-w-2xl">
+            <div
+              className={`flex items-center gap-4 border-b px-4 py-2 font-mono text-[10px] uppercase tracking-widest ${
+                isDarkMode
+                  ? "border-[#2A2F34] bg-[#1B1F23] text-[#6B7278]"
+                  : "border-zinc-200 bg-zinc-50 text-zinc-500"
+              }`}
+            >
+              <span className="w-14">Order</span>
+              <span className="flex-1">Customer</span>
+              <span className="w-24">Payment</span>
+              <span className="w-20 text-right">Amount</span>
+              <span className="w-32 text-right">Status</span>
+            </div>
+            <div
+              className={`divide-y ${
+                isDarkMode ? "divide-[#2A2F34]" : "divide-zinc-200"
+              }`}
+            >
+              {orders.map((order) => {
+                const status = order.status?.toLowerCase() ?? "";
+                return (
+                  <div
+                    key={order.id}
+                    className={`flex items-center gap-4 px-4 py-3 transition-colors ${
+                      isDarkMode ? "hover:bg-[#1B1F23]" : "hover:bg-zinc-50"
                     }`}
                   >
-                    #{String(order.id).padStart(4, "0")}
-                  </span>
-                  <span
-                    className={`flex-1 truncate text-sm font-medium ${
-                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
-                    }`}
-                  >
-                    {order.shipping_name || "Guest customer"}
-                  </span>
-                  <span
-                    className={`w-24 font-mono text-xs uppercase ${
-                      isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
-                    }`}
-                  >
-                    {order.payment_method === "cod"
-                      ? "COD"
-                      : order.payment_method || "—"}
-                  </span>
-                  <span
-                    className={`w-20 text-right font-mono text-sm font-semibold tabular-nums ${
-                      isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
-                    }`}
-                  >
-                    {order.total !== undefined
-                      ? `$${money(Number(order.total))}`
-                      : "—"}
-                  </span>
-                  <span className="flex w-32 justify-end">
                     <span
-                      className={`inline-flex items-center justify-center text-center whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${
-                        STATUS_STYLE[status] ?? "bg-[#2A2F34] text-[#8B9198]"
+                      className={`w-14 font-mono text-xs tabular-nums ${
+                        isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
                       }`}
                     >
-                      {order.status}
+                      #{String(order.id).padStart(4, "0")}
                     </span>
-                  </span>
-                </div>
-              );
-            })}
+                    <span
+                      className={`flex-1 truncate text-sm font-medium ${
+                        isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                      }`}
+                    >
+                      {order.shipping_name || "Guest customer"}
+                    </span>
+                    <span
+                      className={`w-24 font-mono text-xs uppercase ${
+                        isDarkMode ? "text-[#6B7278]" : "text-zinc-500"
+                      }`}
+                    >
+                      {order.payment_method === "cod"
+                        ? "COD"
+                        : order.payment_method || "—"}
+                    </span>
+                    <span
+                      className={`w-20 text-right font-mono text-sm font-semibold tabular-nums ${
+                        isDarkMode ? "text-[#F2F0EB]" : "text-zinc-900"
+                      }`}
+                    >
+                      {order.total !== undefined
+                        ? `$${money(Number(order.total))}`
+                        : "—"}
+                    </span>
+                    <span className="flex w-32 justify-end">
+                      <span
+                        className={`inline-flex items-center justify-center text-center whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${
+                          STATUS_STYLE[status] ?? "bg-[#2A2F34] text-[#8B9198]"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
         </div>
       )}
     </div>

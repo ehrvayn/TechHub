@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import CartIconWithBadge from "@/components/ui/CartIconWithBadge";
 import SearchBar from "@/components/ui/Searchbar";
 import NotificationMenu from "@/components/ui/NotificationMenu";
+import { LogIn } from "lucide-react";
 
 type NavbarProps = {
   showBackButton?: boolean;
@@ -38,25 +39,25 @@ const Navbar = async ({
       <div className="relative mx-auto flex w-full max-w-350 flex-col px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4 sm:px-8">
         <div className="flex w-full items-center justify-between sm:w-auto">
           <div className="flex shrink-0 items-center gap-3">
-          {showBackButton && (
-            <Link
-              href="/"
-              className="text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            >
-              <ArrowLeft size={25} />
-            </Link>
-          )}
+            {showBackButton && (
+              <Link
+                href="/"
+                className="text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              >
+                <ArrowLeft size={25} />
+              </Link>
+            )}
 
-          <Link href="/">
-            <img
-              src={Logo.src}
-              alt="TechHub Logo"
-              className="h-10 w-auto cursor-pointer"
-            />
-          </Link>
+            <Link href="/">
+              <img
+                src={Logo.src}
+                alt="TechHub Logo"
+                className="h-10 w-auto cursor-pointer"
+              />
+            </Link>
           </div>
 
-          <div className="sm:absolute sm:inset-y-0 sm:right-8 sm:flex sm:items-center">
+          <div className="sm:absolute bordersm:inset-y-0 sm:right-6 sm:flex sm:items-center">
             {session ? (
               <ProfileMenu
                 session={session}
@@ -66,8 +67,9 @@ const Navbar = async ({
             ) : (
               <a
                 href="/auth/login"
-                className="rounded-xs bg-emerald-400 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-zinc-950"
+                className="inline-flex items-center gap-1.5 rounded-xs bg-emerald-400 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-emerald-300"
               >
+                <LogIn size={14} className="stroke-[2.5]" />
                 Sign In
               </a>
             )}
@@ -84,7 +86,6 @@ const Navbar = async ({
             </div>
 
             <div className="hidden h-[55] -my-2 w-px bg-zinc-300 dark:bg-zinc-800 sm:block" />
-
           </div>
         </div>
       </div>
