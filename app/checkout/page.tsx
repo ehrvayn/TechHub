@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
 import CheckoutClient from "@/components/CheckoutClient";
 
@@ -11,7 +12,15 @@ export default function CheckoutPage() {
           Checkout
         </h1>
 
-        <CheckoutClient />
+        <Suspense
+          fallback={
+            <div className="py-16 text-center font-mono text-xs text-zinc-500">
+              Loading checkout...
+            </div>
+          }
+        >
+          <CheckoutClient />
+        </Suspense>
       </main>
 
       <footer className="border-t border-zinc-300/60 py-6 text-center font-mono text-xs text-zinc-500 dark:border-zinc-800/60 dark:text-zinc-600">
