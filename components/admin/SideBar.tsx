@@ -169,7 +169,7 @@ export default function Sidebar() {
           </span>
         </button>
         <div
-          className={`space-y-3 border-t -mx-4 h-0.5 px-4 py-3 ${
+          className={`space-y-3 border-t -mx-4 px-4 py-3 ${
             isDarkMode
               ? "border-zinc-800 bg-zinc-950"
               : "border-zinc-200 bg-white"
