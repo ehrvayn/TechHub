@@ -46,22 +46,23 @@ TechHub isn't just a storefront — it's a full application stack. Every feature
 
 ## Architecture
 
+```
 app/
-├── (customer pages) — storefront, cart, checkout, orders
-├── admin/ — admin dashboard pages
-└── api/ — Next.js route handlers (thin, delegate to controllers)
+├── (customer pages)        — storefront, cart, checkout, orders
+├── admin/                  — admin dashboard pages
+└── api/                    — Next.js route handlers (thin, delegate to controllers)
 
 lib/
-├── controllers/ — request/response handling, auth checks
-├── services/ — business logic, orchestration
-├── models/ — raw SQL query builders
-├── auth/ — Auth0 session + role helpers
-└── database/ — connection pool
+├── controllers/             — request/response handling, auth checks
+├── services/                — business logic, orchestration
+├── models/                  — raw SQL query builders
+├── auth/                    — Auth0 session + role helpers
+└── database/                — connection pool
 
 components/
-├── admin/ — dashboard, charts, tables
-└── ui/ — shared customer-facing components
-
+├── admin/                   — dashboard, charts, tables
+└── ui/                      — shared customer-facing components
+```
 
 Each layer has one job: **models** build SQL, **services** call models and apply business rules (ownership checks, validation), **controllers** translate service results into HTTP responses, and **routes** are thin wrappers that just call a controller. This keeps auth and ownership checks (e.g. "can this user review this specific order item?") centralized in services rather than scattered across route handlers.
 
