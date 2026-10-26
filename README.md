@@ -1,4 +1,4 @@
-# TechHub
+  <img src="https://res.cloudinary.com/dlvcjwfjm/image/upload/v1792998237/TechHubLogo.png" alt="InterviewSpark logo" height="48" align="absmiddle">
 
 A full end-to-end e-commerce platform for tech and electronics — a complete customer storefront paired with a live admin back office, built on a layered architecture from the database up.
 
