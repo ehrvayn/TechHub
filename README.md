@@ -2,7 +2,9 @@
 
 A full end-to-end e-commerce platform for tech and electronics — a complete customer storefront paired with a live admin back office, built on a layered architecture from the database up.
 
-**Live:** [techhub-shop.vercel.app](https://techhub-shop.vercel.app)
+**Live:** [VIEW](https://techhub-shop.vercel.app)
+
+![Techhub setup screen](https://res.cloudinary.com/dlvcjwfjm/image/upload/v1792998043/TechhubSample.png)
 
 ---
 
