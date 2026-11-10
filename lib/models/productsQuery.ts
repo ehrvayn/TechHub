@@ -2,7 +2,7 @@ const ProductsQuery = {
   retrieveAll: () => {
     return {
       query: `
-        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, p,total_sold, p.created_at, c.name AS category,
+        SELECT p.id, p.name, p.slug, p.specs, p.price, p.stock, p.total_sold, p.created_at, c.name AS category,
                COALESCE(
                  JSON_AGG(
                    JSON_BUILD_OBJECT('url', pi.url, 'sort_order', pi.sort_order, 'alt_text', pi.alt_text)
